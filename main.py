@@ -23,7 +23,7 @@ logger = logging.getLogger("space")
 
 IRAN_TZ = ZoneInfo("Asia/Tehran")
 
-app = FastAPI(title="X4G", docs_url=None, redoc_url=None)
+app = FastAPI(title="SpaceZone", docs_url=None, redoc_url=None)
 
 # ── Persistence ───────────────────────────────────────────────────────────────
 DATA_DIR = Path(os.environ.get("DATA_DIR", "/data"))
