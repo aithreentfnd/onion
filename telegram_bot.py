@@ -1,7 +1,6 @@
 # telegram_bot.py
-# SpaceZone Telegram Bot — Full management with improved UX
-# Supports: /start, /help, /menu, /cancel, /stop
-# Only ADMIN_IDS can interact
+# SpaceZone Telegram Bot — v10.0
+# Full-featured bot with stats, reports, config management, sub-group management, and password change
 
 import asyncio
 import os
@@ -33,6 +32,11 @@ from main import (
     create_sub_group,
     set_link_sub,
     remove_sub_group,
+    stats,
+    connections,
+    AUTH,
+    hash_password,
+    save_state,
 )
 
 BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
@@ -131,11 +135,17 @@ async def _answer_cb(cb_id: str, text: str = ""):
 def _is_admin(chat_id: int) -> bool:
     return chat_id in ADMIN_IDS
 
+# ── Keyboards ────────────────────────────────────────────────────────────────
+
 def _main_menu_kb():
     return {"inline_keyboard": [
+        [{"text": "📊 Dashboard", "callback_data": "dashboard"}],
         [{"text": "📋 List Configs", "callback_data": "list:0"}],
         [{"text": "➕ New Config", "callback_data": "newcfg"}],
         [{"text": "🗂 Subscription Groups", "callback_data": "subs:0"}],
+        [{"text": "📈 Stats", "callback_data": "stats"}],
+        [{"text": "📄 Report", "callback_data": "report"}],
+        [{"text": "🔑 Change Panel Password", "callback_data": "changepw"}],
         [{"text": "🔄 Refresh", "callback_data": "menu"}],
     ]}
 
@@ -162,8 +172,10 @@ def _links_list_kb(page: int):
 def _link_detail_kb(uid: str, active: bool):
     return {"inline_keyboard": [
         [{"text": "🔗 Show Link", "callback_data": f"link:{uid}"}],
+        [{"text": "📊 Config Stats", "callback_data": f"cfgstats:{uid}"}],
         [{"text": "🗂 Sub Group", "callback_data": f"cfggroup:{uid}"}],
         [{"text": ("⛔ Deactivate" if active else "✅ Activate"), "callback_data": f"toggle:{uid}"}],
+        [{"text": "✏️ Edit", "callback_data": f"editcfg:{uid}"}],
         [{"text": "🗑 Delete", "callback_data": f"del:{uid}"}],
         [{"text": "⬅ Back to List", "callback_data": "list:0"}],
     ]}
@@ -382,6 +394,37 @@ def _format_cfg_group(uid: str) -> str:
         "To get a professional subscription page, add it to a group or create a new one."
     )
 
+def _format_stats() -> str:
+    total_configs = len(LINKS)
+    active_configs = sum(1 for l in LINKS.values() if is_link_allowed(l))
+    total_groups = len(SUBS)
+    active_connections = len(connections)
+    total_traffic_mb = round(stats.get("total_bytes", 0) / (1024 ** 2), 2)
+    total_requests = stats.get("total_requests", 0)
+    total_errors = stats.get("total_errors", 0)
+    return (
+        "📊 <b>SpaceZone Dashboard</b>\n\n"
+        f"📋 Configs: <b>{total_configs}</b> (Active: <b>{active_configs}</b>)\n"
+        f"🗂 Groups: <b>{total_groups}</b>\n"
+        f"🔌 Active Connections: <b>{active_connections}</b>\n"
+        f"📈 Total Traffic: <b>{total_traffic_mb:.2f} MB</b>\n"
+        f"📨 Total Requests: <b>{total_requests}</b>\n"
+        f"⚠️ Total Errors: <b>{total_errors}</b>"
+    )
+
+def _format_report() -> str:
+    if not LINKS:
+        return "📄 No configs found."
+    lines = ["📄 <b>Full Config Report</b>\n"]
+    for uid, l in LINKS.items():
+        status = "🟢 Active" if is_link_allowed(l) else "🔴 Inactive"
+        limit = "∞" if not l.get("limit_bytes") else fmt_bytes(l["limit_bytes"])
+        used = fmt_bytes(l.get("used_bytes", 0))
+        lines.append(f"• <b>{l.get('label','?')}</b> [{status}] — {used} / {limit}")
+    return "\n".join(lines)
+
+# ── Update handling ──────────────────────────────────────────────────────────
+
 async def _handle_message(msg: dict):
     chat_id = msg.get("chat", {}).get("id")
     text = (msg.get("text") or "").strip()
@@ -393,7 +436,7 @@ async def _handle_message(msg: dict):
 
     if text in ("/start", "/menu"):
         _pending.pop(chat_id, None)
-        await _send(chat_id, "👋 Welcome to SpaceZone Bot.\nUse the buttons below to manage your configs:", _main_menu_kb())
+        await _send(chat_id, "👋 Welcome to <b>SpaceZone Bot</b> v10.0.\nUse the buttons below to manage your configs and groups:", _main_menu_kb())
         return
 
     if text in ("/stop", "/cancel"):
@@ -403,14 +446,24 @@ async def _handle_message(msg: dict):
 
     if text == "/help":
         await _send(chat_id, (
-            "🤖 <b>SpaceZone Bot Help</b>\n"
+            "🤖 <b>SpaceZone Bot Help</b>\n\n"
             "/start - Show main menu\n"
             "/menu - Same as start\n"
             "/cancel - Cancel any ongoing operation\n"
             "/stop - Same as cancel\n"
-            "/help - Show this message\n\n"
+            "/help - Show this message\n"
+            "/stats - Show dashboard stats\n"
+            "/report - Generate full config report\n\n"
             "You can manage configs and subscription groups directly from the buttons."
         ), _main_menu_kb())
+        return
+
+    if text == "/stats":
+        await _send(chat_id, _format_stats(), _main_menu_kb())
+        return
+
+    if text == "/report":
+        await _send(chat_id, _format_report(), _main_menu_kb())
         return
 
     pending = _pending.get(chat_id)
@@ -425,6 +478,39 @@ async def _handle_message(msg: dict):
             await _send(chat_id, f"✅ Group created and config added.\n\n{_format_cfg_group(link_uid)}", _cfg_group_kb(link_uid))
         else:
             await _send(chat_id, f"✅ Group created.\n\n{_format_sub_detail(sid, s)}", _sub_detail_kb(sid))
+        return
+
+    if pending and pending.get("action") == "changepw" and pending.get("step") == "current":
+        pending["data"] = {"current": text}
+        pending["step"] = "new"
+        await _send(chat_id, "🔑 Enter <b>new password</b> (minimum 4 characters):", _wizard_cancel_kb())
+        return
+
+    if pending and pending.get("action") == "changepw" and pending.get("step") == "new":
+        new_pw = text.strip()
+        if len(new_pw) < 4:
+            await _send(chat_id, "❌ Password must be at least 4 characters. Try again:", _wizard_cancel_kb())
+            return
+        pending["data"]["new"] = new_pw
+        pending["step"] = "confirm"
+        await _send(chat_id, f"🔑 Confirm new password:\n<code>{new_pw}</code>\n\nType <b>YES</b> to confirm, or <b>/cancel</b> to abort.", _wizard_cancel_kb())
+        return
+
+    if pending and pending.get("action") == "changepw" and pending.get("step") == "confirm":
+        if text.upper() == "YES":
+            current = pending["data"].get("current", "")
+            new_pw = pending["data"].get("new", "")
+            if hash_password(current) != AUTH["password_hash"]:
+                _pending.pop(chat_id, None)
+                await _send(chat_id, "❌ Current password is wrong. Operation cancelled.", _main_menu_kb())
+                return
+            AUTH["password_hash"] = hash_password(new_pw)
+            await save_state()
+            _pending.pop(chat_id, None)
+            await _send(chat_id, "✅ Panel password changed successfully.", _main_menu_kb())
+        else:
+            _pending.pop(chat_id, None)
+            await _send(chat_id, "❌ Password change cancelled.", _main_menu_kb())
         return
 
     if pending and pending.get("action") == "wizard" and text:
@@ -517,6 +603,23 @@ async def _handle_callback(cb: dict):
     if data == "menu":
         _pending.pop(chat_id, None)
         await _edit(chat_id, message_id, "SpaceZone Management Menu:", _main_menu_kb())
+        return
+
+    if data == "dashboard":
+        await _edit(chat_id, message_id, _format_stats(), _main_menu_kb())
+        return
+
+    if data == "stats":
+        await _edit(chat_id, message_id, _format_stats(), _main_menu_kb())
+        return
+
+    if data == "report":
+        await _edit(chat_id, message_id, _format_report(), _main_menu_kb())
+        return
+
+    if data == "changepw":
+        _pending[chat_id] = {"action": "changepw", "step": "current", "data": {}}
+        await _edit(chat_id, message_id, "🔑 Enter <b>current password</b>:", _wizard_cancel_kb())
         return
 
     if data.startswith("list:"):
@@ -638,6 +741,17 @@ async def _handle_callback(cb: dict):
         await _edit(chat_id, message_id, "✏️ Enter name for the new group. The config will be automatically added:", _wizard_cancel_kb())
         return
 
+    if data.startswith("editcfg:"):
+        uid = data.split(":", 1)[1]
+        l = LINKS.get(uid)
+        if not l:
+            await _edit(chat_id, message_id, "Config no longer exists.", _main_menu_kb())
+            return
+        # Simplified edit via re-creation wizard with pre-filled data
+        _pending[chat_id] = {"action": "wizard", "step": "label", "data": {"edit_uid": uid, "label": l.get("label", "New Config")}}
+        await _edit(chat_id, message_id, "✏️ Enter new label (or send /cancel to abort):", _wizard_cancel_kb())
+        return
+
     if data == "newcfg":
         _pending[chat_id] = {"action": "wizard", "step": "label", "data": {}}
         await _edit(chat_id, message_id, _wizard_prompt("label", {}), _wizard_cancel_kb())
@@ -645,7 +759,7 @@ async def _handle_callback(cb: dict):
 
     if data == "w:cancel":
         _pending.pop(chat_id, None)
-        await _edit(chat_id, message_id, "Config creation cancelled.", _main_menu_kb())
+        await _edit(chat_id, message_id, "Operation cancelled.", _main_menu_kb())
         return
 
     if data.startswith("w:"):
@@ -744,6 +858,27 @@ async def _handle_callback(cb: dict):
         await _edit(chat_id, message_id, _format_detail(uid, l), _link_detail_kb(uid, l["active"]))
         return
 
+    if data.startswith("cfgstats:"):
+        uid = data.split(":", 1)[1]
+        l = LINKS.get(uid)
+        if not l:
+            await _edit(chat_id, message_id, "Config no longer exists.", _main_menu_kb())
+            return
+        conn_count = sum(1 for c in connections.values() if c.get("uuid") == uid)
+        msg = (
+            f"📊 <b>Config Stats</b>\n\n"
+            f"Label: <b>{l.get('label','?')}</b>\n"
+            f"UUID: <code>{uid}</code>\n"
+            f"Status: {'🟢 Active' if is_link_allowed(l) else '🔴 Inactive'}\n"
+            f"Usage: {fmt_bytes(l.get('used_bytes',0))} / {fmt_bytes(l.get('limit_bytes',0)) if l.get('limit_bytes',0) > 0 else '∞'}\n"
+            f"Active Connections: <b>{conn_count}</b>\n"
+            f"IP Limit: {l.get('ip_limit',0) or 'Unlimited'}\n"
+            f"Speed Limit: {l.get('speed_limit_bytes',0) or 'Unlimited'}\n"
+            f"Expiry: {l.get('expires_at', 'Never')}"
+        )
+        await _edit(chat_id, message_id, msg, _link_detail_kb(uid, l["active"]))
+        return
+
     if data.startswith("toggle:"):
         uid = data.split(":", 1)[1]
         l = await set_link_active(uid, not LINKS.get(uid, {}).get("active", True))
@@ -789,6 +924,8 @@ async def _handle_callback(cb: dict):
             await _edit(chat_id, message_id, f"🗑 Config «{label}» deleted.", _main_menu_kb())
         return
 
+# ── Polling loop ─────────────────────────────────────────────────────────────
+
 async def _poll_loop():
     global _running
     offset = 0
@@ -813,6 +950,8 @@ async def _poll_loop():
         except Exception as e:
             logger.warning(f"Telegram poll loop error: {e}")
             await asyncio.sleep(3)
+
+# ── Lifecycle ────────────────────────────────────────────────────────────────
 
 async def start_bot():
     global _client, _poll_task, _running
