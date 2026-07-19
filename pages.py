@@ -3,7 +3,7 @@
 # فقط تغییرات ظاهری - بدون تغییر در عملکرد
 
 # لینک مستقیم لوگو
-LOGO_URL = "https://uploadkon.ir/uploads/7e7c16_26InShot-20260628-102209067.jpg"
+LOGO_URL = "https://cdn.imgurl.ir/uploads/o5547_InShot_20260628_102209067.jpg"
 
 LOGIN_HTML = r"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
