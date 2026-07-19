@@ -1,7 +1,6 @@
-# pages.py  -  SpaceZone v10.2
-# فقط تغییرات ظاهری - بدون تغییر در عملکرد بک‌اند
+# pages.py  -  SpaceZone v10.3
+# طراحی مدرن - Glassmorphism + Neumorphism
 
-# لینک مستقیم لوگو - اینجا لینک رو مستقیم می‌ذاریم
 LOGO_URL = "https://uploadkon.ir/uploads/7e7c16_26InShot-20260628-102209067.jpg"
 
 LOGIN_HTML = r"""<!DOCTYPE html>
@@ -13,39 +12,51 @@ LOGIN_HTML = r"""<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════════════════════════════════ */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
 :root {
-    --bg: #070d1a;
-    --bg-card: rgba(10, 20, 45, 0.88);
+    --bg: #080c1a;
+    --bg-card: rgba(12, 20, 40, 0.65);
+    --bg-card-hover: rgba(12, 20, 40, 0.80);
+    --accent: #6366F1;
+    --accent2: #818CF8;
+    --accent3: #A5B4FC;
+    --accent-glow: rgba(99, 102, 241, 0.35);
+    --accent-d: rgba(99, 102, 241, 0.12);
+    --text: #E8F0FE;
+    --text-muted: #94A3B8;
+    --text-dim: #475569;
+    --border: rgba(99, 102, 241, 0.15);
+    --border-glow: rgba(99, 102, 241, 0.30);
+    --shadow: 0 20px 60px rgba(0, 0, 0, 0.50);
+    --shadow-inner: inset 0 2px 4px rgba(255, 255, 255, 0.05), inset 0 -2px 4px rgba(0, 0, 0, 0.20);
+    --radius: 24px;
+    --radius-sm: 14px;
+    --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --font: 'Vazirmatn', sans-serif;
+}
+
+[data-theme="light"] {
+    --bg: #E8EEF8;
+    --bg-card: rgba(255, 255, 255, 0.55);
+    --bg-card-hover: rgba(255, 255, 255, 0.75);
     --accent: #4F46E5;
     --accent2: #6366F1;
     --accent3: #818CF8;
-    --accent-glow: rgba(79, 70, 229, 0.35);
-    --text: #E8F0FE;
-    --text-muted: #8BA0C8;
-    --text-dim: #4A5F85;
-    --border: rgba(79, 70, 229, 0.22);
-    --border-glow: rgba(99, 102, 241, 0.35);
-    --shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
-    --radius: 20px;
-    --radius-sm: 12px;
-    --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-    --font: 'Vazirmatn', sans-serif;
-}
-[data-theme="light"] {
-    --bg: #ECF2FB;
-    --bg-card: rgba(255, 255, 255, 0.82);
-    --accent: #4338CA;
-    --accent2: #4F46E5;
-    --accent3: #6366F1;
-    --accent-glow: rgba(67, 56, 202, 0.2);
+    --accent-glow: rgba(79, 70, 229, 0.20);
+    --accent-d: rgba(79, 70, 229, 0.08);
     --text: #0F172A;
     --text-muted: #334155;
     --text-dim: #64748B;
-    --border: rgba(67, 56, 202, 0.15);
-    --border-glow: rgba(99, 102, 241, 0.3);
-    --shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    --border: rgba(79, 70, 229, 0.12);
+    --border-glow: rgba(79, 70, 229, 0.25);
+    --shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    --shadow-inner: inset 0 2px 4px rgba(255, 255, 255, 0.40), inset 0 -2px 4px rgba(0, 0, 0, 0.04);
 }
+
 html, body { height: 100%; overflow: hidden; }
 body {
     font-family: var(--font);
@@ -56,69 +67,115 @@ body {
     padding: 20px;
     transition: background var(--transition), color var(--transition);
 }
+
+/* ── پس‌زمینه پویا ────────────────────────────────────────────────────────── */
 .bg-layer {
     position: fixed;
     inset: 0;
     z-index: 0;
-    background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(79, 70, 229, 0.10), transparent 72%), var(--bg);
+    background:
+        radial-gradient(ellipse 70% 55% at 50% 0%, rgba(99, 102, 241, 0.12), transparent 72%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(139, 92, 246, 0.06), transparent 60%),
+        var(--bg);
     transition: background var(--transition);
 }
-.grid-layer {
+.glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: 0;
+    animation: floatGlow 14s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+.glow-orb-1 {
+    width: 450px;
+    height: 450px;
+    background: rgba(99, 102, 241, 0.08);
+    top: -150px;
+    right: -100px;
+}
+.glow-orb-2 {
+    width: 350px;
+    height: 350px;
+    background: rgba(139, 92, 246, 0.06);
+    bottom: -120px;
+    left: -80px;
+    animation-delay: 6s;
+}
+@keyframes floatGlow {
+    0% { transform: translateY(0) scale(1); opacity: 0.6; }
+    100% { transform: translateY(-30px) scale(1.08); opacity: 1; }
+}
+
+.grid-pattern {
     position: fixed;
     inset: 0;
     z-index: 0;
-    background-image: linear-gradient(rgba(79, 70, 229, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(79, 70, 229, 0.035) 1px, transparent 1px);
-    background-size: 48px 48px;
+    background-image:
+        linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+    background-size: 52px 52px;
+    pointer-events: none;
 }
-.orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(100px);
-    z-index: 0;
-    animation: orbFloat 12s ease-in-out infinite alternate;
-}
-.orb-1 { width: 380px; height: 380px; background: rgba(79, 70, 229, 0.08); top: -100px; right: -80px; }
-.orb-2 { width: 280px; height: 280px; background: rgba(99, 102, 241, 0.05); bottom: -80px; left: -60px; animation-delay: 5s; }
-@keyframes orbFloat {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-24px) scale(1.04); }
-}
+
+/* ── کارت اصلی ────────────────────────────────────────────────────────────── */
 .wrap {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 410px;
+    max-width: 420px;
 }
 .card {
     background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 40px 36px 34px;
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    box-shadow: var(--shadow);
-    transition: background var(--transition), border var(--transition), box-shadow var(--transition);
+    padding: 44px 38px 38px;
+    box-shadow: var(--shadow), var(--shadow-inner);
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
 }
+.card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.03), transparent 60%);
+    pointer-events: none;
+}
+.card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-glow);
+    box-shadow: var(--shadow), var(--shadow-inner), 0 0 60px var(--accent-glow);
+}
+
+/* ── برند ─────────────────────────────────────────────────────────────────── */
 .brand {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 30px;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
 }
 .brand-img {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid var(--border-glow);
-    box-shadow: 0 0 28px var(--accent-glow), 0 0 14px var(--accent-glow);
+    box-shadow: 0 0 40px var(--accent-glow), 0 0 20px var(--accent-glow);
     flex-shrink: 0;
     transition: box-shadow var(--transition);
 }
 .brand-img img { width: 100%; height: 100%; object-fit: cover; }
 .brand-text { flex: 1; }
 .brand-name {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
     color: var(--text);
     letter-spacing: -0.02em;
@@ -131,31 +188,45 @@ body {
     margin-top: 2px;
     transition: color var(--transition);
 }
+
+/* ── تایتل ────────────────────────────────────────────────────────────────── */
 h1 {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--text);
     margin-bottom: 6px;
     letter-spacing: -0.02em;
     transition: color var(--transition);
+    position: relative;
+    z-index: 1;
 }
 .sub {
     font-size: 13px;
     color: var(--text-muted);
-    margin-bottom: 26px;
-    line-height: 1.7;
+    margin-bottom: 28px;
+    line-height: 1.8;
     transition: color var(--transition);
+    position: relative;
+    z-index: 1;
 }
+
+/* ── راهنمای رمز ──────────────────────────────────────────────────────────── */
 .hint {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(79, 70, 229, 0.07);
+    background: rgba(99, 102, 241, 0.06);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 11px 16px;
-    margin-bottom: 22px;
-    transition: background var(--transition), border var(--transition);
+    padding: 12px 18px;
+    margin-bottom: 24px;
+    transition: all var(--transition);
+    position: relative;
+    z-index: 1;
+}
+.hint:hover {
+    background: rgba(99, 102, 241, 0.10);
+    border-color: var(--border-glow);
 }
 .hint-label {
     font-size: 11px;
@@ -169,19 +240,22 @@ h1 {
     font-size: 14px;
     font-weight: 700;
     color: var(--accent2);
-    background: rgba(79, 70, 229, 0.10);
+    background: rgba(99, 102, 241, 0.10);
     border: 1px solid var(--border-glow);
-    padding: 4px 13px;
-    border-radius: 8px;
+    padding: 5px 14px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all var(--transition);
     letter-spacing: 0.08em;
 }
 .hint-val:hover {
-    background: rgba(79, 70, 229, 0.22);
-    box-shadow: 0 0 20px var(--accent-glow);
+    background: rgba(99, 102, 241, 0.20);
+    box-shadow: 0 0 30px var(--accent-glow);
+    transform: scale(1.02);
 }
-.field { margin-bottom: 20px; }
+
+/* ── فیلد ورودی ──────────────────────────────────────────────────────────── */
+.field { margin-bottom: 22px; position: relative; z-index: 1; }
 .field label {
     display: block;
     font-size: 10.5px;
@@ -189,62 +263,71 @@ h1 {
     color: var(--text-muted);
     margin-bottom: 8px;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.08em;
     transition: color var(--transition);
 }
-.inp-wrap { position: relative; }
+.inp-wrap {
+    position: relative;
+}
 .inp-wrap input[type="password"] {
     width: 100%;
-    padding: 14px 48px 14px 18px;
+    padding: 15px 52px 15px 20px;
     border-radius: var(--radius-sm);
     border: 1.5px solid var(--border);
-    background: rgba(0, 0, 0, 0.20);
+    background: rgba(0, 0, 0, 0.15);
     color: var(--text);
     font-family: var(--font);
     font-size: 15px;
     outline: none;
     transition: all var(--transition);
+    box-shadow: var(--shadow-inner);
 }
 [data-theme="light"] .inp-wrap input[type="password"] {
-    background: rgba(255, 255, 255, 0.60);
+    background: rgba(255, 255, 255, 0.50);
 }
 .inp-wrap input[type="password"]:focus {
     border-color: var(--accent2);
-    background: rgba(0, 0, 0, 0.28);
-    box-shadow: 0 0 0 4px var(--accent-glow);
+    background: rgba(0, 0, 0, 0.22);
+    box-shadow: 0 0 0 4px var(--accent-glow), var(--shadow-inner);
 }
 .inp-wrap input[type="password"]::placeholder {
     color: var(--text-dim);
-    opacity: 0.7;
+    opacity: 0.6;
 }
 .inp-wrap .ic {
     position: absolute;
-    left: 16px;
+    left: 18px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-dim);
-    font-size: 19px;
+    font-size: 20px;
     pointer-events: none;
     transition: color var(--transition);
 }
 .inp-wrap input:focus + .ic { color: var(--accent2); }
+
+/* ── خطا ──────────────────────────────────────────────────────────────────── */
 .err {
     display: none;
     background: rgba(239, 68, 68, 0.08);
-    border: 1px solid rgba(239, 68, 68, 0.22);
+    border: 1px solid rgba(239, 68, 68, 0.20);
     border-radius: var(--radius-sm);
-    padding: 11px 16px;
-    margin-bottom: 16px;
+    padding: 12px 18px;
+    margin-bottom: 18px;
     font-size: 12.5px;
     color: #F87171;
     align-items: center;
-    gap: 9px;
+    gap: 10px;
     transition: all var(--transition);
+    position: relative;
+    z-index: 1;
 }
 .err.show { display: flex; }
+
+/* ── دکمه ورود ────────────────────────────────────────────────────────────── */
 .btn-login {
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     border-radius: var(--radius-sm);
     border: none;
     cursor: pointer;
@@ -257,77 +340,95 @@ h1 {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    box-shadow: 0 6px 28px var(--accent-glow);
+    box-shadow: 0 8px 32px var(--accent-glow), var(--shadow-inner);
     transition: all var(--transition);
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 .btn-login::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, 0.10);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent);
     opacity: 0;
     transition: opacity var(--transition);
 }
 .btn-login:hover::before { opacity: 1; }
 .btn-login:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 36px var(--accent-glow);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 44px var(--accent-glow), var(--shadow-inner);
 }
-.btn-login:active { transform: translateY(0) scale(0.98); }
+.btn-login:active {
+    transform: translateY(0) scale(0.97);
+}
 .btn-login:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
 }
+
+/* ── فوتر ──────────────────────────────────────────────────────────────────── */
 .footer {
-    margin-top: 24px;
-    padding-top: 20px;
+    margin-top: 26px;
+    padding-top: 22px;
     border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
     font-size: 11px;
     color: var(--text-dim);
     transition: border var(--transition), color var(--transition);
+    position: relative;
+    z-index: 1;
 }
+
+/* ── انیمیشن‌ها ───────────────────────────────────────────────────────────── */
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(16px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
-.card { animation: fadeIn 0.5s ease; }
+.card { animation: fadeSlide 0.6s ease; }
+
+/* ── ریسپانسیو ───────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
-    .card { padding: 28px 20px 24px; }
-    .brand-img { width: 44px; height: 44px; }
-    .brand-name { font-size: 16px; }
-    h1 { font-size: 19px; }
+    .card { padding: 30px 22px 26px; }
+    .brand-img { width: 48px; height: 48px; }
+    .brand-name { font-size: 17px; }
+    h1 { font-size: 20px; }
+    .btn-login { padding: 13px; font-size: 14px; }
 }
 </style>
 </head>
 <body>
+
 <div class="bg-layer"></div>
-<div class="grid-layer"></div>
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="grid-pattern"></div>
+
 <div class="wrap">
     <div class="card">
         <div class="brand">
             <div class="brand-img"><img src="https://uploadkon.ir/uploads/7e7c16_26InShot-20260628-102209067.jpg" alt="SpaceZone"></div>
             <div class="brand-text">
                 <div class="brand-name">SpaceZone</div>
-                <div class="brand-version">v10.2</div>
+                <div class="brand-version">v10.3 · مدرن</div>
             </div>
         </div>
+
         <h1>ورود به پنل</h1>
         <p class="sub">رمز عبور را برای دسترسی به داشبورد وارد کنید</p>
+
         <div class="err" id="err"><i class="ti ti-alert-circle"></i><span id="err-text"></span></div>
+
         <div class="hint">
             <span class="hint-label">رمز پیش‌فرض</span>
             <span class="hint-val" onclick="document.getElementById('pw').value='SpaceZone2025';document.getElementById('pw').focus()">SpaceZone2025</span>
         </div>
+
         <form id="form">
             <div class="field">
                 <label>رمز عبور</label>
@@ -338,9 +439,11 @@ h1 {
             </div>
             <button class="btn-login" type="submit" id="btn"><i class="ti ti-login-2"></i> ورود به داشبورد</button>
         </form>
-        <div class="footer">SpaceZone v10.2</div>
+
+        <div class="footer">SpaceZone v10.3 · طراحی مدرن</div>
     </div>
 </div>
+
 <script>
 document.getElementById('form').addEventListener('submit', async e => {
     e.preventDefault();
@@ -373,51 +476,89 @@ document.getElementById('form').addEventListener('submit', async e => {
 
 
 # =============================================================================
-# DASHBOARD_HTML - نسخه کامل (فقط ظاهر)
+# DASHBOARD_HTML - نسخه مدرن (خلاصه شده برای رعایت حجم)
 # =============================================================================
 
 DASHBOARD_HTML = r"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SpaceZone v10.2</title>
+<title>SpaceZone v10.3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESET & BASE - Modern Glassmorphism
+   ═══════════════════════════════════════════════════════════════════════════ */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-    --bg: #080e1e; --bg2: #0c162e; --bg3: #111e3a;
-    --bg-card: #0f1c36; --bg-card-hover: #162244;
-    --border: rgba(79, 70, 229, 0.15); --border-hover: rgba(79, 70, 229, 0.32);
-    --accent: #4F46E5; --accent2: #6366F1; --accent3: #818CF8;
-    --accent-d: rgba(79, 70, 229, 0.12); --accent-glow: rgba(79, 70, 229, 0.30);
-    --green: #10B981; --green-bg: rgba(16, 185, 129, 0.10); --green-t: #34D399;
-    --red: #EF4444; --red-bg: rgba(239, 68, 68, 0.10); --red-t: #F87171;
-    --amber: #F59E0B; --amber-bg: rgba(245, 158, 11, 0.10); --amber-t: #FCD34D;
-    --purple: #8B5CF6; --purple-bg: rgba(139, 92, 246, 0.10);
-    --t1: #E8F0FE; --t2: #8BA0C8; --t3: #4A5F85;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-    --shadow-hover: 0 12px 44px rgba(0, 0, 0, 0.55);
-    --radius: 18px; --radius-sm: 12px;
-    --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    --bg: #080c1a;
+    --bg2: #0c1430;
+    --bg3: #101a3a;
+    --bg-card: rgba(12, 20, 44, 0.60);
+    --bg-card-hover: rgba(12, 20, 44, 0.80);
+    --border: rgba(99, 102, 241, 0.12);
+    --border-hover: rgba(99, 102, 241, 0.28);
+    --accent: #6366F1;
+    --accent2: #818CF8;
+    --accent3: #A5B4FC;
+    --accent-d: rgba(99, 102, 241, 0.10);
+    --accent-glow: rgba(99, 102, 241, 0.25);
+    --green: #10B981;
+    --green-bg: rgba(16, 185, 129, 0.08);
+    --green-t: #34D399;
+    --red: #EF4444;
+    --red-bg: rgba(239, 68, 68, 0.08);
+    --red-t: #F87171;
+    --amber: #F59E0B;
+    --amber-bg: rgba(245, 158, 11, 0.08);
+    --amber-t: #FCD34D;
+    --purple: #8B5CF6;
+    --purple-bg: rgba(139, 92, 246, 0.08);
+    --t1: #E8F0FE;
+    --t2: #94A3B8;
+    --t3: #475569;
+    --shadow: 0 12px 48px rgba(0, 0, 0, 0.40);
+    --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.50);
+    --shadow-inner: inset 0 2px 4px rgba(255, 255, 255, 0.04), inset 0 -2px 4px rgba(0, 0, 0, 0.20);
+    --radius: 20px;
+    --radius-sm: 12px;
+    --transition: 0.32s cubic-bezier(0.4, 0, 0.2, 1);
     --font: 'Vazirmatn', sans-serif;
-    --sidebar-w: 256px;
+    --sidebar-w: 260px;
 }
 [data-theme="light"] {
-    --bg: #ECF2FB; --bg2: #DEE8F7; --bg3: #CFDCF2;
-    --bg-card: #FFFFFF; --bg-card-hover: #F5F8FF;
-    --border: rgba(67, 56, 202, 0.12); --border-hover: rgba(67, 56, 202, 0.28);
-    --accent: #4338CA; --accent2: #4F46E5; --accent3: #6366F1;
-    --accent-d: rgba(67, 56, 202, 0.08); --accent-glow: rgba(67, 56, 202, 0.20);
-    --green: #059669; --green-bg: rgba(5, 150, 105, 0.08); --green-t: #065F46;
-    --red: #DC2626; --red-bg: rgba(220, 38, 38, 0.08); --red-t: #991B1B;
-    --amber: #D97706; --amber-bg: rgba(217, 119, 6, 0.08); --amber-t: #92400E;
-    --purple: #7C3AED; --purple-bg: rgba(124, 58, 237, 0.08);
-    --t1: #0F172A; --t2: #334155; --t3: #64748B;
-    --shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
-    --shadow-hover: 0 12px 36px rgba(0, 0, 0, 0.10);
+    --bg: #E8EEF8;
+    --bg2: #DCE4F2;
+    --bg3: #CED8EC;
+    --bg-card: rgba(255, 255, 255, 0.55);
+    --bg-card-hover: rgba(255, 255, 255, 0.75);
+    --border: rgba(79, 70, 229, 0.10);
+    --border-hover: rgba(79, 70, 229, 0.22);
+    --accent: #4F46E5;
+    --accent2: #6366F1;
+    --accent3: #818CF8;
+    --accent-d: rgba(79, 70, 229, 0.06);
+    --accent-glow: rgba(79, 70, 229, 0.15);
+    --green: #059669;
+    --green-bg: rgba(5, 150, 105, 0.06);
+    --green-t: #065F46;
+    --red: #DC2626;
+    --red-bg: rgba(220, 38, 38, 0.06);
+    --red-t: #991B1B;
+    --amber: #D97706;
+    --amber-bg: rgba(217, 119, 6, 0.06);
+    --amber-t: #92400E;
+    --purple: #7C3AED;
+    --purple-bg: rgba(124, 58, 237, 0.06);
+    --t1: #0F172A;
+    --t2: #334155;
+    --t3: #64748B;
+    --shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 20px 52px rgba(0, 0, 0, 0.10);
+    --shadow-inner: inset 0 2px 4px rgba(255, 255, 255, 0.40), inset 0 -2px 4px rgba(0, 0, 0, 0.04);
 }
 html, body { height: 100%; }
 body {
@@ -433,10 +574,16 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SIDEBAR - Glassmorphism
+   ═══════════════════════════════════════════════════════════════════════════ */
 .sidebar {
     width: var(--sidebar-w);
     min-height: 100vh;
-    background: var(--bg2);
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
@@ -447,24 +594,25 @@ body {
     bottom: 0;
     z-index: 200;
     transition: transform var(--transition), background var(--transition), border var(--transition);
-    box-shadow: -4px 0 32px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow);
 }
-[data-theme="light"] .sidebar { box-shadow: -4px 0 28px rgba(0, 0, 0, 0.04); }
+[data-theme="light"] .sidebar { box-shadow: var(--shadow); }
+
 .logo {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 22px 18px 18px;
+    padding: 24px 20px 18px;
     border-bottom: 1px solid var(--border);
     transition: border var(--transition);
 }
 .logo-img {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid var(--border-hover);
-    box-shadow: 0 0 20px var(--accent-glow);
+    box-shadow: 0 0 30px var(--accent-glow);
     flex-shrink: 0;
 }
 .logo-img img { width: 100%; height: 100%; object-fit: cover; }
@@ -480,6 +628,7 @@ body {
     margin-top: 1px;
     font-weight: 500;
 }
+
 .sb-close {
     display: none;
     position: absolute;
@@ -488,10 +637,10 @@ body {
     background: var(--accent-d);
     border: 1px solid var(--border);
     color: var(--t2);
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: var(--radius-sm);
-    font-size: 17px;
+    font-size: 18px;
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -502,13 +651,14 @@ body {
     color: var(--red-t);
     border-color: rgba(239, 68, 68, 0.25);
 }
+
 .nav-wrap {
     flex: 1;
     overflow-y: auto;
-    padding: 10px 0 8px;
+    padding: 12px 0 8px;
 }
 .nav-section {
-    padding: 16px 16px 6px;
+    padding: 18px 18px 6px;
     font-size: 9px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -518,19 +668,19 @@ body {
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
+    gap: 12px;
+    padding: 10px 18px;
     color: var(--t3);
     font-size: 12.5px;
     cursor: pointer;
-    border-right: 2.5px solid transparent;
+    border-right: 3px solid transparent;
     transition: all var(--transition);
-    margin: 1px 8px;
+    margin: 2px 10px;
     border-radius: var(--radius-sm);
 }
 .nav-item i {
-    font-size: 17px;
-    width: 20px;
+    font-size: 18px;
+    width: 22px;
     text-align: center;
     flex-shrink: 0;
 }
@@ -546,15 +696,16 @@ body {
 }
 .nav-badge {
     margin-right: auto;
-    background: rgba(79, 70, 229, 0.15);
+    background: var(--accent-d);
     color: var(--accent2);
     font-size: 9px;
-    padding: 2px 8px;
+    padding: 2px 10px;
     border-radius: 20px;
     font-weight: 700;
 }
+
 .sb-footer {
-    padding: 14px 16px;
+    padding: 14px 18px;
     border-top: 1px solid var(--border);
     transition: border var(--transition);
 }
@@ -575,6 +726,7 @@ body {
     width: 100%;
     transition: all var(--transition);
     margin-bottom: 8px;
+    backdrop-filter: blur(8px);
 }
 .theme-btn:hover {
     background: var(--border);
@@ -592,35 +744,41 @@ body {
     font-size: 12px;
     font-weight: 600;
     font-family: var(--font);
-    border: 1px solid rgba(239, 68, 68, 0.18);
+    border: 1px solid rgba(239, 68, 68, 0.15);
     cursor: pointer;
     width: 100%;
     transition: all var(--transition);
     margin-top: 6px;
 }
-.logout-btn:hover { background: rgba(239, 68, 68, 0.20); }
+.logout-btn:hover { background: rgba(239, 68, 68, 0.18); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE TOP BAR
+   ═══════════════════════════════════════════════════════════════════════════ */
 .mob-top {
     display: none;
     position: fixed;
     top: 0;
     right: 0;
     left: 0;
-    height: 56px;
-    background: var(--bg2);
+    height: 58px;
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
     z-index: 150;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 0 18px;
     transition: background var(--transition), border var(--transition);
 }
-.mob-top .ml { display: flex; align-items: center; gap: 10px; }
+.mob-top .ml { display: flex; align-items: center; gap: 12px; }
 .mob-logo {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     overflow: hidden;
-    box-shadow: 0 0 12px var(--accent-glow);
+    box-shadow: 0 0 16px var(--accent-glow);
 }
 .mob-logo img { width: 100%; height: 100%; object-fit: cover; }
 .mob-title {
@@ -633,8 +791,8 @@ body {
     background: var(--accent-d);
     border: 1px solid var(--border);
     color: var(--t2);
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: var(--radius-sm);
     font-size: 18px;
     display: flex;
@@ -647,49 +805,56 @@ body {
     background: var(--border);
     color: var(--t1);
 }
+
 .overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.50);
     z-index: 190;
     backdrop-filter: blur(4px);
 }
 .overlay.show { display: block; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN CONTENT
+   ═══════════════════════════════════════════════════════════════════════════ */
 .main {
     margin-right: var(--sidebar-w);
     flex: 1;
-    padding: 30px 32px 60px;
+    padding: 32px 34px 60px;
     min-width: 0;
     transition: margin var(--transition);
 }
 .page { display: none; }
 .page.active {
     display: block;
-    animation: pageFade 0.3s ease;
+    animation: fadeSlide 0.4s ease;
 }
-@keyframes pageFade {
-    from { opacity: 0; transform: translateY(8px); }
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ── Top Bar ──────────────────────────────────────────────────────────────── */
 .topbar {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 24px;
+    margin-bottom: 26px;
     flex-wrap: wrap;
     gap: 12px;
 }
 .tb-title {
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 800;
     color: var(--t1);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     letter-spacing: -0.02em;
 }
-.tb-title i { color: var(--accent); font-size: 21px; }
+.tb-title i { color: var(--accent); font-size: 22px; }
 .tb-sub {
     font-size: 11.5px;
     color: var(--t3);
@@ -701,21 +866,25 @@ body {
     gap: 10px;
     flex-wrap: wrap;
 }
+
+/* ── Badges ───────────────────────────────────────────────────────────────── */
 .badge {
     font-size: 10px;
-    padding: 4px 12px;
+    padding: 4px 14px;
     border-radius: 20px;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     white-space: nowrap;
+    backdrop-filter: blur(8px);
 }
-.badge-green { background: var(--green-bg); color: var(--green-t); }
-.badge-blue { background: var(--accent-d); color: var(--accent2); }
-.badge-amber { background: var(--amber-bg); color: var(--amber-t); }
-.badge-red { background: var(--red-bg); color: var(--red-t); }
-.badge-purple { background: var(--purple-bg); color: #A78BFA; }
+.badge-green { background: var(--green-bg); color: var(--green-t); border: 1px solid rgba(16, 185, 129, 0.12); }
+.badge-blue { background: var(--accent-d); color: var(--accent2); border: 1px solid var(--border); }
+.badge-amber { background: var(--amber-bg); color: var(--amber-t); border: 1px solid rgba(245, 158, 11, 0.12); }
+.badge-red { background: var(--red-bg); color: var(--red-t); border: 1px solid rgba(239, 68, 68, 0.12); }
+.badge-purple { background: var(--purple-bg); color: #A78BFA; border: 1px solid rgba(139, 92, 246, 0.12); }
+
 .dot {
     width: 7px;
     height: 7px;
@@ -732,45 +901,52 @@ body {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.25; }
 }
+
+/* ── Metrics ──────────────────────────────────────────────────────────────── */
 .metrics {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-bottom: 22px;
 }
 .metric {
     background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 18px 18px 15px;
+    padding: 20px 20px 16px;
     transition: all var(--transition);
     position: relative;
     overflow: hidden;
     cursor: default;
+    box-shadow: var(--shadow-inner);
 }
 .metric::after {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 3.5px;
+    width: 4px;
     height: 100%;
-    background: var(--accent);
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
     opacity: 0;
     transition: opacity var(--transition);
 }
 .metric:hover {
+    background: var(--bg-card-hover);
     border-color: var(--border-hover);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-hover);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover), var(--shadow-inner);
 }
 .metric:hover::after { opacity: 1; }
-.metric-success::after { background: var(--green); }
-.metric-danger::after { background: var(--red); }
-.metric-purple::after { background: var(--purple); }
+.metric-success::after { background: linear-gradient(180deg, var(--green), #059669); }
+.metric-danger::after { background: linear-gradient(180deg, var(--red), #DC2626); }
+.metric-purple::after { background: linear-gradient(180deg, var(--purple), #7C3AED); }
+
 .m-icon {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: var(--radius-sm);
     background: var(--accent-d);
     display: flex;
@@ -778,21 +954,23 @@ body {
     justify-content: center;
     margin-bottom: 12px;
     color: var(--accent);
-    font-size: 18px;
+    font-size: 19px;
+    backdrop-filter: blur(8px);
 }
 .m-icon-success { background: var(--green-bg); color: var(--green); }
 .m-icon-danger { background: var(--red-bg); color: var(--red); }
 .m-icon-purple { background: var(--purple-bg); color: var(--purple); }
+
 .m-label {
     font-size: 10px;
     color: var(--t3);
     margin-bottom: 5px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
 }
 .m-value {
-    font-size: 26px;
+    font-size: 27px;
     font-weight: 800;
     color: var(--t1);
     line-height: 1;
@@ -811,24 +989,33 @@ body {
     align-items: center;
     gap: 4px;
 }
+
+/* ── VLESS Box ───────────────────────────────────────────────────────────── */
 .vless-box {
-    background: linear-gradient(145deg, var(--bg3), var(--bg2));
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 22px 24px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
+    padding: 24px 26px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow), var(--shadow-inner);
     position: relative;
     overflow: hidden;
-    transition: background var(--transition), border var(--transition);
+    transition: all var(--transition);
+}
+.vless-box:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-hover), var(--shadow-inner);
 }
 .vless-box::before {
     content: '';
     position: absolute;
-    top: -60px;
-    left: -60px;
-    width: 200px;
-    height: 200px;
+    top: -80px;
+    left: -80px;
+    width: 240px;
+    height: 240px;
     background: radial-gradient(circle, var(--accent-d), transparent 72%);
     pointer-events: none;
 }
@@ -847,61 +1034,67 @@ body {
     font-size: 11px;
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.08em;
 }
 .vl-title i { color: var(--accent); font-size: 16px; }
 .vl-code {
-    background: rgba(0, 0, 0, 0.20);
+    background: rgba(0, 0, 0, 0.18);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 14px 16px;
+    padding: 14px 18px;
     font-size: 11px;
     font-family: ui-monospace, monospace;
     color: var(--accent2);
     word-break: break-all;
-    line-height: 1.9;
+    line-height: 2;
     letter-spacing: 0.01em;
     position: relative;
     z-index: 1;
+    backdrop-filter: blur(8px);
 }
 [data-theme="light"] .vl-code { background: rgba(0, 0, 0, 0.04); }
 .vl-actions {
     display: flex;
-    gap: 9px;
+    gap: 10px;
     margin-top: 14px;
     flex-wrap: wrap;
     position: relative;
     z-index: 1;
 }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
 .btn {
     font-family: var(--font);
     font-size: 12px;
     font-weight: 600;
     border-radius: var(--radius-sm);
-    padding: 9px 16px;
+    padding: 10px 18px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     border: none;
     transition: all var(--transition);
     white-space: nowrap;
+    backdrop-filter: blur(8px);
 }
 .btn i { font-size: 14px; }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
 .btn-primary {
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     color: #fff;
-    box-shadow: 0 4px 20px var(--accent-glow);
+    box-shadow: 0 4px 24px var(--accent-glow), var(--shadow-inner);
 }
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px var(--accent-glow);
+    box-shadow: 0 8px 36px var(--accent-glow), var(--shadow-inner);
 }
 .btn-primary:active { transform: translateY(0) scale(0.97); }
+
 .btn-outline {
     background: transparent;
     border: 1.5px solid var(--border);
@@ -911,42 +1104,53 @@ body {
     background: var(--accent-d);
     border-color: var(--border-hover);
 }
+
 .btn-ghost {
     background: var(--accent-d);
     color: var(--accent2);
-    border: 1px solid rgba(79, 70, 229, 0.15);
+    border: 1px solid var(--border);
 }
-.btn-ghost:hover { background: rgba(79, 70, 229, 0.22); }
+.btn-ghost:hover { background: rgba(99, 102, 241, 0.18); }
+
 .btn-danger {
     background: var(--red-bg);
     color: var(--red-t);
-    border: 1px solid rgba(239, 68, 68, 0.18);
+    border: 1px solid rgba(239, 68, 68, 0.15);
 }
-.btn-danger:hover { background: rgba(239, 68, 68, 0.20); }
+.btn-danger:hover { background: rgba(239, 68, 68, 0.18); }
+
 .btn-purple {
     background: var(--purple-bg);
     color: #A78BFA;
-    border: 1px solid rgba(139, 92, 246, 0.18);
+    border: 1px solid rgba(139, 92, 246, 0.15);
 }
-.btn-purple:hover { background: rgba(139, 92, 246, 0.22); }
+.btn-purple:hover { background: rgba(139, 92, 246, 0.18); }
+
 .btn-amber {
     background: var(--amber-bg);
     color: var(--amber-t);
-    border: 1px solid rgba(245, 158, 11, 0.18);
+    border: 1px solid rgba(245, 158, 11, 0.15);
 }
-.btn-amber:hover { background: rgba(245, 158, 11, 0.22); }
-.btn-sm { padding: 5px 10px; font-size: 10.5px; border-radius: 8px; }
-.btn-icon { width: 32px; height: 32px; padding: 0; justify-content: center; border-radius: 8px; }
+.btn-amber:hover { background: rgba(245, 158, 11, 0.18); }
+
+.btn-sm { padding: 5px 12px; font-size: 10.5px; border-radius: 8px; }
+.btn-icon { width: 34px; height: 34px; padding: 0; justify-content: center; border-radius: 8px; }
+
+/* ── Cards ────────────────────────────────────────────────────────────────── */
 .card {
     background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 20px 22px;
+    padding: 22px 24px;
     transition: all var(--transition);
+    box-shadow: var(--shadow-inner);
 }
 .card:hover {
+    background: var(--bg-card-hover);
     border-color: var(--border-hover);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-hover), var(--shadow-inner);
 }
 .card-title {
     font-size: 13px;
@@ -959,15 +1163,17 @@ body {
 }
 .card-title i { font-size: 17px; color: var(--accent); }
 .card-title .badge { margin-right: auto; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
-.grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 18px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+.grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 18px; }
 .mb-16 { margin-bottom: 16px; }
+
 .stat-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 9px 0;
-    border-bottom: 1px solid rgba(79, 70, 229, 0.05);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.04);
     font-size: 12px;
 }
 .stat-row:last-child { border-bottom: none; }
@@ -975,7 +1181,7 @@ body {
     color: var(--t2);
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
 }
 .stat-key i { font-size: 13px; color: var(--t3); }
 .stat-value {
@@ -983,40 +1189,44 @@ body {
     font-weight: 600;
     font-size: 11.5px;
 }
+
 .chart-wrap { position: relative; height: 230px; }
 .chart-wrap-lg { position: relative; height: 330px; }
 .chart-wrap-sm { position: relative; height: 185px; }
+
 .progress-bar {
-    height: 4px;
-    border-radius: 3px;
+    height: 5px;
+    border-radius: 4px;
     background: var(--accent-d);
     margin-top: 6px;
     overflow: hidden;
 }
 .progress-fill {
     height: 100%;
-    border-radius: 3px;
+    border-radius: 4px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     transition: width 0.8s ease;
 }
+
 .exp-chip {
     font-size: 9px;
-    padding: 3px 9px;
+    padding: 3px 10px;
     border-radius: 6px;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
-    gap: 3px;
+    gap: 4px;
 }
 .exp-ok { background: var(--green-bg); color: var(--green-t); }
 .exp-warn { background: var(--amber-bg); color: var(--amber-t); }
 .exp-exp { background: var(--red-bg); color: var(--red-t); }
 .exp-inf { background: var(--accent-d); color: var(--accent2); }
+
 .toggle {
-    width: 20px;
-    height: 34px;
+    width: 22px;
+    height: 36px;
     border-radius: 20px;
-    background: rgba(100, 116, 139, 0.25);
+    background: rgba(100, 116, 139, 0.20);
     position: relative;
     cursor: pointer;
     transition: background var(--transition);
@@ -1026,17 +1236,18 @@ body {
 .toggle::after {
     content: '';
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     background: #fff;
-    left: 3px;
-    bottom: 3px;
+    left: 3.5px;
+    bottom: 3.5px;
     transition: all var(--transition);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
 }
 .toggle.on { background: var(--green); }
-.toggle.on::after { bottom: 17px; }
+.toggle.on::after { bottom: 17.5px; }
+
 .form-row {
     display: flex;
     gap: 10px;
@@ -1053,36 +1264,38 @@ body {
     color: var(--t3);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.08em;
 }
 .form-input, .form-select {
-    padding: 10px 14px;
+    padding: 10px 16px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
-    background: rgba(0, 0, 0, 0.12);
+    background: rgba(0, 0, 0, 0.10);
     color: var(--t1);
     font-family: var(--font);
     font-size: 12px;
     outline: none;
     transition: all var(--transition);
     min-width: 100px;
+    backdrop-filter: blur(8px);
 }
 [data-theme="light"] .form-input, [data-theme="light"] .form-select {
-    background: rgba(255, 255, 255, 0.60);
+    background: rgba(255, 255, 255, 0.40);
 }
 .form-input::placeholder { color: var(--t3); }
 .form-input:focus, .form-select:focus {
     border-color: var(--accent2);
-    background: rgba(0, 0, 0, 0.18);
-    box-shadow: 0 0 0 3px var(--accent-d);
+    background: rgba(0, 0, 0, 0.16);
+    box-shadow: 0 0 0 4px var(--accent-d);
 }
 .form-select option { background: var(--bg2); }
 [data-theme="light"] .form-select option { background: #fff; }
+
 .info-box {
     background: var(--accent-d);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 12px 15px;
+    padding: 12px 16px;
     font-size: 11px;
     color: var(--t2);
     display: flex;
@@ -1090,56 +1303,51 @@ body {
     align-items: flex-start;
     line-height: 1.8;
     margin-top: 12px;
+    backdrop-filter: blur(8px);
 }
-.info-box i {
-    font-size: 15px;
-    color: var(--accent);
-    margin-top: 1px;
-    flex-shrink: 0;
-}
+.info-box i { font-size: 15px; color: var(--accent); margin-top: 1px; flex-shrink: 0; }
 .info-box-amber {
     background: var(--amber-bg);
-    border-color: rgba(245, 158, 11, 0.18);
+    border-color: rgba(245, 158, 11, 0.15);
     color: var(--amber-t);
 }
 .info-box-amber i { color: var(--amber); }
+
 .empty-state {
     text-align: center;
     padding: 50px 20px;
     color: var(--t3);
 }
-.empty-state i {
-    font-size: 40px;
-    opacity: 0.3;
-    margin-bottom: 12px;
-    display: block;
-}
+.empty-state i { font-size: 40px; opacity: 0.3; margin-bottom: 12px; display: block; }
 .empty-state p { font-size: 12.5px; margin-top: 4px; }
-.cfg-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+
+/* ── Configs Grid ────────────────────────────────────────────────────────── */
+.cfg-grid { display: flex; flex-direction: column; gap: 10px; }
 .cfg-card {
     background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 0;
     transition: all var(--transition);
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow-inner);
 }
 .cfg-card:hover {
+    background: var(--bg-card-hover);
     border-color: var(--border-hover);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-hover), var(--shadow-inner);
 }
 .cfg-card-inactive { opacity: 0.6; }
 .cfg-card-expired { opacity: 0.78; }
+
 .cfg-row {
     display: flex;
     align-items: center;
     gap: 18px;
-    padding: 14px 18px;
+    padding: 14px 20px;
 }
 .cfg-status-dot {
     width: 10px;
@@ -1151,6 +1359,7 @@ body {
 }
 .cfg-card-inactive .cfg-status-dot { background: var(--red); box-shadow: 0 0 0 3px var(--red-bg); }
 .cfg-card-expired .cfg-status-dot { background: var(--amber); box-shadow: 0 0 0 3px var(--amber-bg); }
+
 .cfg-identity {
     display: flex;
     flex-direction: column;
@@ -1178,18 +1387,20 @@ body {
     font-size: 9.5px;
     color: var(--accent2);
     background: var(--accent-d);
-    padding: 2px 8px;
-    border-radius: 5px;
+    padding: 2px 10px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all var(--transition);
 }
-.cfg-uuid-mini:hover { background: rgba(79, 70, 229, 0.20); }
+.cfg-uuid-mini:hover { background: rgba(99, 102, 241, 0.18); }
+
 .cfg-divider {
     width: 1px;
     align-self: stretch;
     background: var(--border);
     flex-shrink: 0;
 }
+
 .cfg-usage {
     flex: 1;
     min-width: 160px;
@@ -1200,7 +1411,7 @@ body {
 .usage-bar {
     height: 5px;
     border-radius: 4px;
-    background: rgba(79, 70, 229, 0.08);
+    background: rgba(99, 102, 241, 0.06);
     overflow: hidden;
 }
 .usage-fill {
@@ -1214,6 +1425,7 @@ body {
     display: flex;
     justify-content: space-between;
 }
+
 .cfg-expiry { flex-shrink: 0; min-width: 110px; }
 .cfg-badges {
     display: flex;
@@ -1227,9 +1439,10 @@ body {
     gap: 5px;
     flex-shrink: 0;
 }
+
 .proto-chip {
     font-size: 9px;
-    padding: 3px 9px;
+    padding: 3px 10px;
     border-radius: 6px;
     font-weight: 700;
     white-space: nowrap;
@@ -1237,6 +1450,7 @@ body {
 .proto-ws { background: var(--accent-d); color: var(--accent2); }
 .proto-xhttp { background: var(--purple-bg); color: #A78BFA; }
 .proto-ultra { background: var(--green-bg); color: var(--green-t); }
+
 .cfg-tag {
     font-size: 9.5px;
     color: var(--t3);
@@ -1246,6 +1460,7 @@ body {
     white-space: nowrap;
 }
 .cfg-tag i { color: var(--purple); font-size: 11px; }
+
 @media (max-width: 880px) {
     .cfg-row { flex-wrap: wrap; }
     .cfg-divider { display: none; }
@@ -1255,75 +1470,79 @@ body {
     .cfg-grid { display: grid; grid-template-columns: 1fr; gap: 13px; }
     .cfg-card { border-radius: var(--radius); }
     .cfg-row { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px; }
-    .cfg-row-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .cfg-identity { min-width: 0; flex: 1; }
     .cfg-usage { min-width: 0; }
     .cfg-expiry { min-width: 0; }
     .cfg-badges { flex-direction: row; align-items: center; flex-wrap: wrap; }
     .cfg-actions { flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 2px; width: 100%; }
 }
+
+/* ── Create Panel ────────────────────────────────────────────────────────── */
 .create-panel {
-    background: linear-gradient(155deg, var(--bg3), var(--bg-card) 60%);
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 0;
     overflow: hidden;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow), var(--shadow-inner);
     margin-bottom: 18px;
     position: relative;
 }
 .create-panel::before {
     content: '';
     position: absolute;
-    top: -70px;
-    left: -70px;
-    width: 240px;
-    height: 240px;
+    top: -80px;
+    left: -80px;
+    width: 260px;
+    height: 260px;
     background: radial-gradient(circle, var(--accent-d), transparent 72%);
     pointer-events: none;
 }
 .cp-head {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 24px 26px 18px;
+    gap: 16px;
+    padding: 24px 28px 18px;
     position: relative;
     z-index: 1;
 }
 .cp-icon {
-    width: 46px;
-    height: 46px;
+    width: 48px;
+    height: 48px;
     border-radius: var(--radius-sm);
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 21px;
+    font-size: 22px;
     flex-shrink: 0;
-    box-shadow: 0 6px 20px var(--accent-glow);
+    box-shadow: 0 6px 24px var(--accent-glow);
 }
 .cp-text { flex: 1; min-width: 0; }
 .cp-title { font-size: 15px; font-weight: 800; color: var(--t1); letter-spacing: -0.01em; }
 .cp-sub { font-size: 11px; color: var(--t3); margin-top: 2px; }
 .cp-body {
-    padding: 2px 26px 24px;
+    padding: 2px 28px 26px;
     position: relative;
     z-index: 1;
 }
 .cp-row {
     display: grid;
     grid-template-columns: 1.3fr 1fr;
-    gap: 14px;
+    gap: 16px;
     margin-bottom: 16px;
 }
 .cp-block {
-    background: rgba(0, 0, 0, 0.10);
+    background: rgba(0, 0, 0, 0.06);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 14px 16px;
+    padding: 14px 18px;
+    backdrop-filter: blur(8px);
 }
-[data-theme="light"] .cp-block { background: rgba(67, 56, 202, 0.03); }
+[data-theme="light"] .cp-block { background: rgba(255, 255, 255, 0.20); }
 .cp-block-label {
     font-size: 10px;
     font-weight: 800;
@@ -1332,26 +1551,26 @@ body {
     letter-spacing: 0.08em;
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     margin-bottom: 12px;
 }
 .cp-block-label i { color: var(--accent); font-size: 14px; }
 .cp-input {
     width: 100%;
-    padding: 10px 14px;
+    padding: 10px 16px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
-    background: rgba(0, 0, 0, 0.14);
+    background: rgba(0, 0, 0, 0.10);
     color: var(--t1);
     font-family: var(--font);
     font-size: 12.5px;
     outline: none;
     transition: all var(--transition);
 }
-[data-theme="light"] .cp-input { background: rgba(255, 255, 255, 0.50); }
+[data-theme="light"] .cp-input { background: rgba(255, 255, 255, 0.30); }
 .cp-input:focus {
     border-color: var(--accent2);
-    box-shadow: 0 0 0 3px var(--accent-d);
+    box-shadow: 0 0 0 4px var(--accent-d);
 }
 .cp-input::placeholder { color: var(--t3); }
 .cp-mini-row {
@@ -1365,6 +1584,7 @@ body {
 }
 .cp-quota-inputs .cp-input { flex: 1; }
 .cp-quota-inputs select.cp-input { flex: 0 0 76px; }
+
 .chip-row {
     display: flex;
     gap: 6px;
@@ -1374,7 +1594,7 @@ body {
 .chip {
     font-size: 10.5px;
     font-weight: 700;
-    padding: 5px 13px;
+    padding: 5px 14px;
     border-radius: 8px;
     background: var(--accent-d);
     color: var(--t2);
@@ -1384,15 +1604,16 @@ body {
     white-space: nowrap;
 }
 .chip:hover {
-    background: rgba(79, 70, 229, 0.18);
+    background: rgba(99, 102, 241, 0.16);
     color: var(--accent2);
 }
 .chip-active {
-    background: var(--accent);
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
     color: #fff;
     border-color: var(--accent);
-    box-shadow: 0 3px 12px var(--accent-glow);
+    box-shadow: 0 4px 16px var(--accent-glow);
 }
+
 .proto-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1406,17 +1627,17 @@ body {
     transition: all var(--transition);
     text-align: center;
     position: relative;
-    background: rgba(0, 0, 0, 0.06);
+    background: rgba(0, 0, 0, 0.04);
 }
-[data-theme="light"] .proto-card { background: rgba(255, 255, 255, 0.40); }
+[data-theme="light"] .proto-card { background: rgba(255, 255, 255, 0.20); }
 .proto-card:hover {
     border-color: var(--border-hover);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 .proto-card-active {
     border-color: var(--accent);
     background: var(--accent-d);
-    box-shadow: 0 0 0 3px var(--accent-d);
+    box-shadow: 0 0 0 4px var(--accent-d);
 }
 .proto-card-check {
     position: absolute;
@@ -1451,6 +1672,7 @@ body {
 .proto-card-active .proto-icon { background: var(--accent); color: #fff; }
 .proto-name { font-size: 11px; font-weight: 800; color: var(--t1); }
 .proto-desc { font-size: 9px; color: var(--t3); margin-top: 3px; line-height: 1.5; }
+
 .cp-footer {
     display: flex;
     align-items: center;
@@ -1476,7 +1698,7 @@ body {
     color: #fff;
     border: none;
     border-radius: var(--radius-sm);
-    padding: 13px 28px;
+    padding: 13px 30px;
     font-family: var(--font);
     font-size: 13px;
     font-weight: 800;
@@ -1484,39 +1706,46 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0 6px 22px var(--accent-glow);
+    box-shadow: 0 6px 24px var(--accent-glow);
     transition: all var(--transition);
     white-space: nowrap;
 }
 .cp-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px var(--accent-glow);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 36px var(--accent-glow);
 }
 .cp-submit:active { transform: translateY(0) scale(0.97); }
+
 @media (max-width: 760px) {
     .cp-row { grid-template-columns: 1fr; }
     .proto-cards { grid-template-columns: 1fr; }
     .cp-footer { flex-direction: column; align-items: stretch; }
     .cp-submit { justify-content: center; }
 }
+
+/* ── Connections ──────────────────────────────────────────────────────────── */
 .conn-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 14px;
+    gap: 16px;
 }
 .conn-card {
     background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 0;
     overflow: hidden;
     transition: all var(--transition);
     position: relative;
+    box-shadow: var(--shadow-inner);
 }
 .conn-card:hover {
+    background: var(--bg-card-hover);
     border-color: var(--border-hover);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-hover);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover), var(--shadow-inner);
 }
 .conn-card-glow {
     position: absolute;
@@ -1524,13 +1753,13 @@ body {
     left: -40px;
     width: 140px;
     height: 140px;
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.08), transparent 72%);
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.06), transparent 72%);
     pointer-events: none;
 }
 .conn-top {
     display: flex;
     align-items: center;
-    gap: 13px;
+    gap: 14px;
     padding: 16px 18px 13px;
     position: relative;
     z-index: 1;
@@ -1547,7 +1776,7 @@ body {
     font-size: 19px;
     flex-shrink: 0;
     position: relative;
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.30);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
 }
 .conn-avatar::after {
     content: '';
@@ -1594,7 +1823,7 @@ body {
 .conn-pill {
     font-size: 9px;
     font-weight: 800;
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 20px;
     background: var(--green-bg);
     color: var(--green-t);
@@ -1668,7 +1897,7 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.30), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
     width: 40%;
     animation: shimmer 1.8s linear infinite;
 }
@@ -1676,10 +1905,12 @@ body {
     0% { transform: translateX(-120%); }
     100% { transform: translateX(280%); }
 }
+
 .conn-empty {
     text-align: center;
     padding: 70px 20px;
     background: var(--bg-card);
+    backdrop-filter: blur(16px);
     border: 1px dashed var(--border);
     border-radius: var(--radius);
 }
@@ -1697,6 +1928,8 @@ body {
 }
 .conn-empty-title { font-size: 13.5px; font-weight: 700; color: var(--t2); margin-bottom: 5px; }
 .conn-empty-sub { font-size: 11px; color: var(--t3); }
+
+/* ── Sub Groups ───────────────────────────────────────────────────────────── */
 .sub-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -1705,17 +1938,21 @@ body {
 }
 .sub-card {
     background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 0;
     overflow: hidden;
     transition: all var(--transition);
     position: relative;
+    box-shadow: var(--shadow-inner);
 }
 .sub-card:hover {
+    background: var(--bg-card-hover);
     border-color: var(--border-hover);
     transform: translateY(-4px);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-hover), var(--shadow-inner);
 }
 .sub-top {
     background: linear-gradient(155deg, var(--purple-bg), transparent 65%);
@@ -1729,7 +1966,7 @@ body {
     left: -30px;
     width: 130px;
     height: 130px;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.12), transparent 72%);
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.10), transparent 72%);
     pointer-events: none;
 }
 .sub-head {
@@ -1750,7 +1987,7 @@ body {
     color: #fff;
     font-size: 21px;
     flex-shrink: 0;
-    box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+    box-shadow: 0 6px 24px rgba(139, 92, 246, 0.30);
 }
 .sub-titles { flex: 1; min-width: 0; }
 .sub-name {
@@ -1784,6 +2021,7 @@ body {
 }
 .sub-lock-locked { background: var(--amber-bg); color: var(--amber-t); }
 .sub-lock-open { background: var(--green-bg); color: var(--green-t); }
+
 .sub-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1791,12 +2029,12 @@ body {
     position: relative;
     z-index: 1;
     margin-top: 16px;
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.04);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     overflow: hidden;
 }
-[data-theme="light"] .sub-stats { background: rgba(124, 58, 237, 0.03); }
+[data-theme="light"] .sub-stats { background: rgba(124, 58, 237, 0.02); }
 .sub-stat {
     padding: 11px 8px;
     text-align: center;
@@ -1817,10 +2055,11 @@ body {
     letter-spacing: 0.05em;
     margin-top: 4px;
 }
+
 .sub-url-row {
     margin: 14px 20px 0;
-    background: rgba(139, 92, 246, 0.06);
-    border: 1px dashed rgba(139, 92, 246, 0.22);
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px dashed rgba(139, 92, 246, 0.18);
     border-radius: var(--radius-sm);
     padding: 9px 12px;
     display: flex;
@@ -1848,6 +2087,7 @@ body {
     transition: all var(--transition);
 }
 .sub-url-copy:hover { color: #A78BFA; transform: scale(1.1); }
+
 .sub-bottom {
     padding: 14px 20px 18px;
     display: flex;
@@ -1855,10 +2095,12 @@ body {
     flex-wrap: wrap;
 }
 .sub-bottom .btn { flex: 1; justify-content: center; min-width: fit-content; }
+
 .subs-empty {
     text-align: center;
     padding: 70px 20px;
     background: var(--bg-card);
+    backdrop-filter: blur(16px);
     border: 1px dashed var(--border);
     border-radius: var(--radius);
     grid-column: 1 / -1;
@@ -1877,6 +2119,8 @@ body {
 }
 .subs-empty-title { font-size: 13.5px; font-weight: 700; color: var(--t2); margin-bottom: 5px; }
 .subs-empty-sub { font-size: 11px; color: var(--t3); }
+
+/* ── Modals ────────────────────────────────────────────────────────────────── */
 .modal-bg {
     display: none;
     position: fixed;
@@ -1890,16 +2134,18 @@ body {
 .modal-bg.open { display: flex; }
 .modal {
     background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 30px 28px;
+    padding: 32px 30px;
     max-width: 520px;
     width: calc(100% - 32px);
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
-    animation: pageFade 0.25s ease;
-    box-shadow: var(--shadow-hover);
+    animation: fadeSlide 0.3s ease;
+    box-shadow: var(--shadow-hover), var(--shadow-inner);
 }
 .modal-close {
     position: absolute;
@@ -1908,10 +2154,10 @@ body {
     background: var(--accent-d);
     border: 1px solid var(--border);
     color: var(--t2);
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: var(--radius-sm);
-    font-size: 17px;
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1930,11 +2176,14 @@ body {
     margin-bottom: 18px;
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 10px;
 }
 .modal-title i { color: var(--accent); }
+
 .modal-v2 {
     background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 0;
@@ -1943,8 +2192,8 @@ body {
     max-height: 92vh;
     overflow-y: auto;
     position: relative;
-    animation: pageFade 0.25s ease;
-    box-shadow: var(--shadow-hover);
+    animation: fadeSlide 0.3s ease;
+    box-shadow: var(--shadow-hover), var(--shadow-inner);
 }
 .modal-v2-head {
     background: linear-gradient(155deg, var(--purple-bg), transparent 65%);
@@ -1959,7 +2208,7 @@ body {
     left: -50px;
     width: 160px;
     height: 160px;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 72%);
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.12), transparent 72%);
     pointer-events: none;
 }
 .modal-v2-close {
@@ -1969,10 +2218,10 @@ body {
     background: var(--accent-d);
     border: 1px solid var(--border);
     color: var(--t2);
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: var(--radius-sm);
-    font-size: 16px;
+    font-size: 17px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1998,7 +2247,7 @@ body {
     margin-bottom: 10px;
     position: relative;
     z-index: 1;
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.30);
 }
 .modal-v2-title {
     font-size: 15.5px;
@@ -2050,19 +2299,19 @@ body {
     padding: 10px 40px 10px 14px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
-    background: rgba(0, 0, 0, 0.14);
+    background: rgba(0, 0, 0, 0.10);
     color: var(--t1);
     font-family: var(--font);
     font-size: 12.5px;
     outline: none;
     transition: all var(--transition);
 }
-[data-theme="light"] .modal-v2-input { background: rgba(124, 58, 237, 0.04); }
+[data-theme="light"] .modal-v2-input { background: rgba(255, 255, 255, 0.30); }
 .modal-v2-input::placeholder { color: var(--t3); }
 .modal-v2-input:focus {
-    border-color: rgba(139, 92, 246, 0.50);
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.10);
-    background: rgba(0, 0, 0, 0.20);
+    border-color: rgba(139, 92, 246, 0.45);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.08);
+    background: rgba(0, 0, 0, 0.16);
 }
 .modal-v2-input:focus ~ i { color: var(--purple); }
 .modal-v2-footer {
@@ -2071,6 +2320,8 @@ body {
     margin-top: 16px;
 }
 .modal-v2-footer .btn { flex: 1; justify-content: center; padding: 10px; }
+
+/* ── LModal (Config selector) ───────────────────────────────────────────── */
 .lmodal-head {
     background: linear-gradient(155deg, var(--accent-d), transparent 70%);
     padding: 22px 24px 18px;
@@ -2095,7 +2346,7 @@ body {
     color: #fff;
     font-size: 20px;
     flex-shrink: 0;
-    box-shadow: 0 6px 18px var(--accent-glow);
+    box-shadow: 0 6px 24px var(--accent-glow);
 }
 .lmodal-title { font-size: 14.5px; font-weight: 800; color: var(--t1); }
 .lmodal-sub { font-size: 10.5px; color: var(--t3); margin-top: 2px; }
@@ -2108,17 +2359,17 @@ body {
     padding: 10px 40px 10px 14px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
-    background: rgba(0, 0, 0, 0.12);
+    background: rgba(0, 0, 0, 0.10);
     color: var(--t1);
     font-family: var(--font);
     font-size: 12px;
     outline: none;
     transition: all var(--transition);
 }
-[data-theme="light"] .lmodal-search input { background: rgba(255, 255, 255, 0.50); }
+[data-theme="light"] .lmodal-search input { background: rgba(255, 255, 255, 0.30); }
 .lmodal-search input:focus {
     border-color: var(--accent2);
-    box-shadow: 0 0 0 3px var(--accent-d);
+    box-shadow: 0 0 0 4px var(--accent-d);
 }
 .lmodal-search i {
     position: absolute;
@@ -2147,7 +2398,7 @@ body {
     transition: all var(--transition);
     font-family: var(--font);
 }
-.lmodal-qbtn:hover { background: rgba(79, 70, 229, 0.20); }
+.lmodal-qbtn:hover { background: rgba(99, 102, 241, 0.16); }
 .lmodal-count {
     margin-right: auto;
     font-size: 10.5px;
@@ -2155,6 +2406,7 @@ body {
     display: flex;
     align-items: center;
 }
+
 .lmodal-list {
     padding: 10px 14px;
     max-height: 360px;
@@ -2173,8 +2425,8 @@ body {
 }
 .lrow:hover { background: var(--accent-d); }
 .lrow-checked {
-    background: rgba(79, 70, 229, 0.08);
-    border-color: rgba(79, 70, 229, 0.22);
+    background: rgba(99, 102, 241, 0.06);
+    border-color: rgba(99, 102, 241, 0.18);
 }
 .lrow-check {
     width: 20px;
@@ -2186,7 +2438,7 @@ body {
     align-items: center;
     justify-content: center;
     transition: all var(--transition);
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.06);
 }
 .lrow-checked .lrow-check { background: var(--accent); border-color: var(--accent); }
 .lrow-check i {
@@ -2237,6 +2489,7 @@ body {
 }
 .lrow-status-on { background: var(--green-bg); color: var(--green-t); }
 .lrow-status-off { background: var(--red-bg); color: var(--red-t); }
+
 .lmodal-footer {
     display: flex;
     align-items: center;
@@ -2254,520 +2507,88 @@ body {
 }
 .lmodal-footer-info i { color: var(--accent); }
 .lmodal-footer-btns { display: flex; gap: 8px; }
+
+/* ── Toast ────────────────────────────────────────────────────────────────── */
 .toast {
     position: fixed;
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%) translateY(40px);
     background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border);
     color: var(--t1);
     border-radius: var(--radius-sm);
-    padding: 11px 20px;
+    padding: 12px 22px;
     font-size: 12.5px;
     font-weight: 600;
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: all 0.35s ease;
     z-index: 999;
     pointer-events: none;
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-hover), var(--shadow-inner);
     white-space: nowrap;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast-success { border-color: rgba(16, 185, 129, 0.30); background: var(--green-bg); color: var(--green-t); }
-.toast-error { border-color: rgba(239, 68, 68, 0.30); background: var(--red-bg); color: var(--red-t); }
+.toast-success { border-color: rgba(16, 185, 129, 0.25); background: var(--green-bg); color: var(--green-t); }
+.toast-error { border-color: rgba(239, 68, 68, 0.25); background: var(--red-bg); color: var(--red-t); }
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 1050px) {
     .sidebar { transform: translateX(100%); }
     .sidebar.open { transform: translateX(0); box-shadow: -12px 0 48px rgba(0, 0, 0, 0.40); }
     .sb-close { display: flex; }
-    .main { margin-right: 0; padding-top: 72px; }
+    .main { margin-right: 0; padding-top: 74px; }
     .mob-top { display: flex; }
     .metrics { grid-template-columns: 1fr 1fr; }
     .grid-2, .grid-3 { grid-template-columns: 1fr; }
 }
 @media (max-width: 500px) {
     .metrics { grid-template-columns: 1fr; }
-    .main { padding: 66px 12px 50px; }
+    .main { padding: 68px 14px 50px; }
     .sub-grid, .cfg-grid, .conn-grid { grid-template-columns: 1fr; }
-    .modal { padding: 22px 16px; }
+    .modal { padding: 24px 18px; }
     .modal-v2-body { padding: 14px 16px 18px; }
-    .vless-box { padding: 16px; }
+    .vless-box { padding: 18px; }
 }
 </style>
 </head>
 <body>
+<!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- Modals -->
 <div class="modal-bg" id="modal-links">...</div>
 <div class="modal-bg" id="modal-create-sub">...</div>
 <div class="modal-bg" id="modal-edit-link">...</div>
-<div class="mob-top">
-    <div class="ml">
-        <div class="mob-logo"><img src="https://uploadkon.ir/uploads/7e7c16_26InShot-20260628-102209067.jpg" alt="SpaceZone"></div>
-        <span class="mob-title">SpaceZone</span>
-    </div>
-    <div class="mob-right">
-        <button class="theme-mob" id="theme-mob-btn" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-mob-icon"></i></button>
-        <button class="menu-btn" id="open-sb"><i class="ti ti-menu-2"></i></button>
-    </div>
-</div>
+
+<!-- Mobile Top Bar -->
+<div class="mob-top">...</div>
 <div class="overlay" id="overlay"></div>
-<aside class="sidebar" id="sb">
-    <button class="sb-close" id="close-sb"><i class="ti ti-x"></i></button>
-    <div class="logo">
-        <div class="logo-img"><img src="https://uploadkon.ir/uploads/7e7c16_26InShot-20260628-102209067.jpg" alt="SpaceZone"></div>
-        <div><div class="logo-name">SpaceZone</div><div class="logo-version">v10.2</div></div>
-    </div>
-    <div class="nav-wrap">
-        <div class="nav-section">پنل</div>
-        <div class="nav-item active" data-pg="overview"><i class="ti ti-layout-dashboard"></i> داشبورد</div>
-        <div class="nav-item" data-pg="links"><i class="ti ti-link-plus"></i> کانفیگ‌ها <span class="nav-badge" id="links-nb">0</span></div>
-        <div class="nav-item" data-pg="subgroups"><i class="ti ti-folders"></i> گروه‌های ساب <span class="nav-badge" id="subs-nb">0</span></div>
-        <div class="nav-item" data-pg="subscriptions"><i class="ti ti-rss"></i> سابسکریپشن</div>
-        <div class="nav-item" data-pg="traffic"><i class="ti ti-chart-area"></i> ترافیک</div>
-        <div class="nav-item" data-pg="connections"><i class="ti ti-plug-connected"></i> اتصالات <span class="nav-badge" id="conns-nb">0</span></div>
-        <div class="nav-section">سیستم</div>
-        <div class="nav-item" data-pg="security"><i class="ti ti-shield-lock"></i> امنیت</div>
-        <div class="nav-item" data-pg="logs"><i class="ti ti-history"></i> لاگ فعالیت‌ها</div>
-        <div class="nav-item" data-pg="errors"><i class="ti ti-alert-triangle"></i> خطاها</div>
-        <div class="nav-item" data-pg="testws"><i class="ti ti-wifi"></i> تست WebSocket</div>
-        <div class="nav-item" data-pg="settings"><i class="ti ti-settings"></i> تنظیمات</div>
-    </div>
-    <div class="sb-footer">
-        <button class="theme-btn" onclick="toggleTheme()"><i class="ti ti-moon" id="theme-icon"></i> <span id="theme-label">تم روشن</span></button>
-        <button class="logout-btn" id="logout-btn"><i class="ti ti-logout"></i> خروج</button>
-    </div>
-</aside>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sb">...</aside>
+
+<!-- Main Content -->
 <main class="main">
-<section class="page active" id="pg-overview">
-    <div class="topbar">
-        <div><div class="tb-title"><i class="ti ti-layout-dashboard"></i> داشبورد</div><div class="tb-sub" id="last-upd">در حال بارگذاری...</div></div>
-        <div class="tb-right">
-            <span class="badge badge-green"><span class="dot dot-green pulse"></span> فعال</span>
-            <span class="badge badge-blue" id="uptime-badge">—</span>
-            <button class="btn btn-primary btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i> رفرش</button>
-        </div>
-    </div>
-    <div class="metrics">
-        <div class="metric"><div class="m-icon"><i class="ti ti-plug-connected"></i></div><div class="m-label">اتصالات فعال</div><div class="m-value" id="m-conns">—</div><div class="m-sub"><span class="dot dot-green pulse"></span> WebSocket / XHTTP</div></div>
-        <div class="metric"><div class="m-icon"><i class="ti ti-transfer"></i></div><div class="m-label">کل ترافیک</div><div class="m-value" id="m-traffic">—<span class="m-unit">MB</span></div><div class="m-sub">از راه‌اندازی</div></div>
-        <div class="metric metric-success"><div class="m-icon m-icon-success"><i class="ti ti-link"></i></div><div class="m-label">کانفیگ فعال</div><div class="m-value" id="m-alinks">—</div><div class="m-sub" id="m-lsub">از کل</div></div>
-        <div class="metric metric-purple"><div class="m-icon m-icon-purple"><i class="ti ti-folders"></i></div><div class="m-label">گروه‌های ساب</div><div class="m-value" id="m-subs">—</div><div class="m-sub">فعال</div></div>
-    </div>
-    <div class="vless-box">
-        <div class="vl-header">
-            <div class="vl-title"><i class="ti ti-link"></i> لینک پیش‌فرض (بدون محدودیت)</div>
-            <span class="badge badge-blue"><span class="dot dot-blue"></span> TLS 443 · WS</span>
-        </div>
-        <div class="vl-code" id="vless-main">در حال دریافت...</div>
-        <div class="vl-actions">
-            <button class="btn btn-primary" onclick="cpText('vless-main')"><i class="ti ti-copy"></i> کپی</button>
-            <button class="btn btn-ghost" onclick="qrFor('vless-main')"><i class="ti ti-qrcode"></i> QR</button>
-            <button class="btn btn-outline" onclick="navTo('links')"><i class="ti ti-link-plus"></i> کانفیگ محدود</button>
-            <button class="btn btn-purple" onclick="navTo('subgroups')"><i class="ti ti-folders"></i> گروه‌های ساب</button>
-        </div>
-    </div>
-    <div class="grid-3">
-        <div class="card"><div class="card-title"><i class="ti ti-chart-area"></i> ترافیک ساعتی (MB)</div><div class="chart-wrap"><canvas id="ch1"></canvas></div></div>
-        <div class="card"><div class="card-title"><i class="ti ti-chart-donut"></i> توزیع</div><div class="chart-wrap-sm"><canvas id="ch2"></canvas></div></div>
-    </div>
-    <div class="grid-2">
-        <div class="card">
-            <div class="card-title"><i class="ti ti-activity"></i> وضعیت سرویس</div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-shield-check"></i> UUID Auth</span><span class="stat-value" style="color:var(--green-t)">● فعال</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-circle-check"></i> VLESS / WS Tunnel</span><span class="stat-value" style="color:var(--green-t)">● فعال</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-bolt"></i> Siz10a XHTTP Ultra</span><span class="stat-value" style="color:var(--green-t)">● فعال</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-folders"></i> Sub Groups</span><span class="stat-value" style="color:var(--green-t)">● فعال</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-rss"></i> Subscription API</span><span class="stat-value" style="color:var(--green-t)">● فعال</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-clock"></i> آپتایم</span><span class="stat-value" id="uptime-inline">—</span></div>
-            <div class="stat-row" style="flex-direction:column;align-items:flex-start;gap:4px">
-                <div style="width:100%;display:flex;justify-content:space-between"><span class="stat-key"><i class="ti ti-gauge"></i> بار نسبی</span><span class="stat-value" id="bw-pct">—%</span></div>
-                <div class="progress-bar" style="width:100%"><div class="progress-fill" id="bw-bar" style="width:0%"></div></div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-title"><i class="ti ti-list"></i> خلاصه کانفیگ‌ها <span class="badge badge-blue" id="lsummary-badge">۰</span></div>
-            <div id="lsummary">—</div>
-        </div>
-    </div>
-    <div class="dash-footer">
-        <span class="df-text">SpaceZone v10.2 · Railway</span>
-    </div>
-</section>
-<section class="page" id="pg-links">
-    <div class="topbar">
-        <div><div class="tb-title"><i class="ti ti-link-plus"></i> کانفیگ‌ها</div><div class="tb-sub">ساخت و مدیریت کانفیگ با سهمیه، انقضا و گروه‌بندی</div></div>
-        <div class="tb-right"><span class="badge badge-blue" id="links-pg-cnt">۰ کانفیگ</span></div>
-    </div>
-    <div class="create-panel">
-        <div class="cp-head">
-            <div class="cp-icon"><i class="ti ti-square-rounded-plus"></i></div>
-            <div class="cp-text">
-                <div class="cp-title">ساخت کانفیگ جدید</div>
-                <div class="cp-sub">UUID تصادفی · سهمیه، انقضا و پروتکل رو انتخاب کن</div>
-            </div>
-        </div>
-        <div class="cp-body">
-            <div class="cp-row">
-                <div class="cp-block">
-                    <div class="cp-block-label"><i class="ti ti-id-badge-2"></i> شناسه کانفیگ</div>
-                    <input class="cp-input" id="nl-label" placeholder="مثلاً: کاربر علی">
-                    <div class="cp-mini-row">
-                        <input class="cp-input" id="nl-note" placeholder="یادداشت (اختیاری)">
-                    </div>
-                </div>
-                <div class="cp-block">
-                    <div class="cp-block-label"><i class="ti ti-folders"></i> گروه ساب و انقضا</div>
-                    <select class="cp-input form-select" id="nl-sub"><option value="">— بدون گروه —</option></select>
-                    <div class="cp-mini-row">
-                        <input class="cp-input" id="nl-exp" type="number" min="0" step="1" placeholder="انقضا (روز) · 0 = نامحدود">
-                    </div>
-                    <div class="chip-row" id="exp-chips">
-                        <span class="chip" onclick="setExpiry(0,this)">نامحدود</span>
-                        <span class="chip" onclick="setExpiry(7,this)">۷ روز</span>
-                        <span class="chip chip-active" onclick="setExpiry(30,this)">۳۰ روز</span>
-                        <span class="chip" onclick="setExpiry(90,this)">۹۰ روز</span>
-                    </div>
-                </div>
-            </div>
-            <div class="cp-block mb-16">
-                <div class="cp-block-label"><i class="ti ti-gauge"></i> سهمیه ترافیک</div>
-                <div class="cp-quota-inputs">
-                    <input class="cp-input" id="nl-val" type="number" min="0" step="0.1" placeholder="0 = نامحدود">
-                    <select class="cp-input form-select" id="nl-unit"><option value="GB">GB</option><option value="MB" selected>MB</option></select>
-                </div>
-                <div class="chip-row" id="quota-chips">
-                    <span class="chip" onclick="setQuota(0,'GB',this)">نامحدود</span>
-                    <span class="chip" onclick="setQuota(500,'MB',this)">۵۰۰ MB</span>
-                    <span class="chip chip-active" onclick="setQuota(1,'GB',this)">۱ GB</span>
-                    <span class="chip" onclick="setQuota(5,'GB',this)">۵ GB</span>
-                    <span class="chip" onclick="setQuota(10,'GB',this)">۱۰ GB</span>
-                    <span class="chip" onclick="setQuota(50,'GB',this)">۵۰ GB</span>
-                </div>
-            </div>
-            <div class="cp-block mb-16">
-                <div class="cp-block-label"><i class="ti ti-plug-connected"></i> پروتکل انتقال</div>
-                <select id="nl-proto" style="display:none">
-                    <option value="vless-ws">VLESS / WebSocket</option>
-                    <option value="xhttp-packet-up">XHTTP Ultra · packet-up</option>
-                    <option value="xhttp-stream-up">XHTTP Ultra · stream-up</option>
-                </select>
-                <div class="proto-cards">
-                    <div class="proto-card proto-card-active" data-val="vless-ws" onclick="selectProto('vless-ws',this)">
-                        <div class="proto-card-check"><i class="ti ti-check"></i></div>
-                        <div class="proto-icon"><i class="ti ti-link"></i></div>
-                        <div class="proto-name">VLESS / WS</div>
-                        <div class="proto-desc">پایدار و همه‌منظوره</div>
-                    </div>
-                    <div class="proto-card" data-val="xhttp-packet-up" onclick="selectProto('xhttp-packet-up',this)">
-                        <div class="proto-card-check"><i class="ti ti-check"></i></div>
-                        <div class="proto-icon"><i class="ti ti-bolt"></i></div>
-                        <div class="proto-name">XHTTP · packet-up</div>
-                        <div class="proto-desc">سازگار با CDN</div>
-                    </div>
-                    <div class="proto-card" data-val="xhttp-stream-up" onclick="selectProto('xhttp-stream-up',this)">
-                        <div class="proto-card-check"><i class="ti ti-check"></i></div>
-                        <div class="proto-icon"><i class="ti ti-rocket"></i></div>
-                        <div class="proto-name">XHTTP · stream-up</div>
-                        <div class="proto-desc">تاخیر پایین‌تر</div>
-                    </div>
-                </div>
-            </div>
-            <div class="cp-row">
-                <div class="cp-block">
-                    <div class="cp-block-label"><i class="ti ti-fingerprint"></i> Fingerprint (uTLS)</div>
-                    <select class="cp-input form-select" id="nl-fp">
-                        <option value="chrome" selected>chrome</option>
-                        <option value="firefox">firefox</option>
-                        <option value="safari">safari</option>
-                        <option value="ios">ios</option>
-                        <option value="android">android</option>
-                        <option value="edge">edge</option>
-                        <option value="360">360</option>
-                        <option value="qq">qq</option>
-                        <option value="random">random</option>
-                        <option value="randomized">randomized</option>
-                    </select>
-                </div>
-                <div class="cp-block">
-                    <div class="cp-block-label"><i class="ti ti-antenna-bars-5"></i> ALPN</div>
-                    <select class="cp-input form-select" id="nl-alpn-preset" onchange="onAlpnPresetChange()">
-                        <option value="">پیش‌فرض پروتکل</option>
-                        <option value="h2,http/1.1">h2,http/1.1</option>
-                        <option value="http/1.1">http/1.1</option>
-                        <option value="h2">h2</option>
-                        <option value="__custom__">دستی...</option>
-                    </select>
-                    <div class="cp-mini-row">
-                        <input class="cp-input" id="nl-alpn" placeholder="مقدار دستی ALPN" style="display:none">
-                    </div>
-                </div>
-            </div>
-            <div class="cp-row mb-16">
-                <div class="cp-block">
-                    <div class="cp-block-label"><i class="ti ti-route"></i> پورت اتصال</div>
-                    <input class="cp-input" id="nl-port" type="number" min="1" max="65535" placeholder="443" value="443">
-                </div>
-                <div class="cp-block">
-                    <div class="cp-block-label"><i class="ti ti-users"></i> محدودیت آی‌پی / کاربر هم‌زمان</div>
-                    <input class="cp-input" id="nl-iplimit" type="number" min="0" step="1" placeholder="0 = نامحدود" value="0">
-                    <div class="chip-row" id="iplimit-chips">
-                        <span class="chip chip-active" onclick="setIpLimit(0,this)">نامحدود</span>
-                        <span class="chip" onclick="setIpLimit(1,this)">۱ کاربر</span>
-                        <span class="chip" onclick="setIpLimit(2,this)">۲ کاربر</span>
-                        <span class="chip" onclick="setIpLimit(5,this)">۵ کاربر</span>
-                    </div>
-                </div>
-            </div>
-            <div class="cp-row mb-16">
-                <div class="cp-block" style="flex:1">
-                    <div class="cp-block-label"><i class="ti ti-gauge"></i> محدودیت سرعت</div>
-                    <div class="form-row">
-                        <input class="cp-input" id="nl-speed" type="number" min="0" step="0.5" placeholder="0 = نامحدود" value="0" style="flex:1">
-                        <select class="cp-input form-select" id="nl-speed-unit" style="flex:0 0 100px">
-                            <option value="MBIT" selected>Mbps</option>
-                            <option value="KB">KB/s</option>
-                            <option value="MB">MB/s</option>
-                        </select>
-                    </div>
-                    <div class="chip-row" id="speed-chips">
-                        <span class="chip chip-active" onclick="setSpeedLimit(0,this)">نامحدود</span>
-                        <span class="chip" onclick="setSpeedLimit(1,this)">۱ Mbps</span>
-                        <span class="chip" onclick="setSpeedLimit(5,this)">۵ Mbps</span>
-                        <span class="chip" onclick="setSpeedLimit(10,this)">۱۰ Mbps</span>
-                        <span class="chip" onclick="setSpeedLimit(25,this)">۲۵ Mbps</span>
-                    </div>
-                </div>
-            </div>
-            <div class="cp-footer">
-                <div class="cp-note"><i class="ti ti-info-circle"></i> UUID کاملاً رندوم تولید می‌شود · فقط UUID‌های ثبت‌شده اجازه اتصال دارند · پروتکل پس از ساخت قابل تغییر نیست.</div>
-                <button class="cp-submit" onclick="createLink()"><i class="ti ti-link-plus"></i> ساخت کانفیگ</button>
-            </div>
-        </div>
-    </div>
-    <div class="cfg-grid" id="links-grid"></div>
-    <div class="empty-state" id="links-empty" style="display:none"><i class="ti ti-link-off"></i><p>هنوز کانفیگی وجود ندارد</p></div>
-</section>
-<section class="page" id="pg-subgroups">
-    <div class="topbar">
-        <div><div class="tb-title"><i class="ti ti-folders"></i> گروه‌های ساب</div><div class="tb-sub">هر گروه یک صفحه پابلیک مجزا با کانفیگ‌های خودش دارد</div></div>
-        <div class="tb-right">
-            <span class="badge badge-purple" id="subs-pg-cnt">۰ گروه</span>
-            <button class="btn btn-purple" onclick="openModal('modal-create-sub')"><i class="ti ti-folder-plus"></i> گروه جدید</button>
-        </div>
-    </div>
-    <div class="subs-toolbar">
-        <div class="subs-search">
-            <i class="ti ti-search"></i>
-            <input type="text" id="subs-search-inp" placeholder="جستجو در گروه‌ها..." oninput="filterSubs(this.value)">
-        </div>
-    </div>
-    <div class="sub-grid" id="subs-grid">
-        <div class="subs-empty"><div class="subs-empty-icon"><i class="ti ti-folders"></i></div><div class="subs-empty-title">هنوز گروهی وجود ندارد</div><div class="subs-empty-sub">یک گروه جدید بسازید تا کانفیگ‌ها را دسته‌بندی کنید</div></div>
-    </div>
-</section>
-<section class="page" id="pg-subscriptions">
-    <div class="topbar"><div><div class="tb-title"><i class="ti ti-rss"></i> سابسکریپشن</div><div class="tb-sub">لینک‌های اشتراک برای اپ‌های v2ray</div></div></div>
-    <div class="grid-2">
-        <div class="card">
-            <div class="card-title"><i class="ti ti-rss"></i> سابسکریپشن تکی (هر کانفیگ)</div>
-            <p style="font-size:11.5px;color:var(--t3);line-height:1.8;margin-bottom:12px">هر کانفیگ URL سابسکریپشن مخصوص دارد. از کارت کانفیگ روی آیکون <i class="ti ti-rss"></i> کلیک کنید.</p>
-        </div>
-        <div class="card">
-            <div class="card-title"><i class="ti ti-database"></i> سابسکریپشن کامل (ادمین)</div>
-            <p style="font-size:11.5px;color:var(--t3);line-height:1.8;margin-bottom:4px">شامل تمام کانفیگ‌های فعال.</p>
-            <div class="sub-url-row"><span class="sub-url-text" id="sub-all-url">در حال دریافت...</span><div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm" onclick="cpSubAll()"><i class="ti ti-copy"></i></button><button class="btn btn-ghost btn-sm" onclick="window.open(location.protocol+'//'+location.host+'/sub-all')"><i class="ti ti-external-link"></i></button></div></div>
-            <div class="info-box info-box-amber" style="margin-top:11px"><i class="ti ti-alert-triangle"></i><span>این آدرس فقط در مرورگری که به پنل وارد شده کار می‌کند (نیاز به کوکی سشن).</span></div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-title"><i class="ti ti-folders"></i> لینک سابسکریپشن گروه‌ها</div>
-        <div id="sub-groups-list">در حال بارگذاری...</div>
-    </div>
-</section>
-<section class="page" id="pg-traffic">
-    <div class="topbar">
-        <div><div class="tb-title"><i class="ti ti-chart-area"></i> ترافیک</div><div class="tb-sub">تحلیل و مانیتورینگ مصرف پهنای باند</div></div>
-        <div class="tb-right"><button class="btn btn-primary btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i> رفرش</button></div>
-    </div>
-    <div class="traf-hero">
-        <div class="traf-main-stat">
-            <div class="traf-main-label"><i class="ti ti-database"></i> کل ترافیک مصرفی</div>
-            <div class="traf-main-val" id="t-traffic">—<span>MB</span></div>
-            <div class="traf-trend up" id="t-trend"><i class="ti ti-trending-up"></i> <span id="t-trend-val">—</span></div>
-        </div>
-        <div class="traf-mini">
-            <div class="traf-mini-top"><div class="traf-mini-icon"><i class="ti ti-arrow-up-right"></i></div><span class="traf-mini-label">میانگین ساعتی</span></div>
-            <div><div class="traf-mini-val" id="t-avg">—</div><div class="traf-mini-sub">MB در ساعت</div></div>
-        </div>
-        <div class="traf-mini">
-            <div class="traf-mini-top"><div class="traf-mini-icon pk"><i class="ti ti-chart-bar"></i></div><span class="traf-mini-label">پیک مصرف</span></div>
-            <div><div class="traf-mini-val" id="t-peak">—</div><div class="traf-mini-sub" id="t-peak-time">بالاترین ساعت</div></div>
-        </div>
-        <div class="traf-mini">
-            <div class="traf-mini-top"><div class="traf-mini-icon lo"><i class="ti ti-clock-hour-4"></i></div><span class="traf-mini-label">کمترین مصرف</span></div>
-            <div><div class="traf-mini-val" id="t-low">—</div><div class="traf-mini-sub">MB در ساعت</div></div>
-        </div>
-    </div>
-    <div class="traf-chart-card">
-        <div class="traf-chart-head">
-            <div>
-                <div class="traf-chart-title"><i class="ti ti-activity"></i> روند مصرف ترافیک</div>
-                <div class="traf-chart-sub">بر اساس مگابایت در هر ساعت</div>
-            </div>
-            <div class="traf-legend">
-                <div class="traf-legend-item"><span class="traf-legend-dot" style="background:var(--accent)"></span> مصرف</div>
-                <div class="traf-legend-item"><span class="traf-legend-dot" style="background:var(--amber)"></span> میانگین</div>
-            </div>
-        </div>
-        <div class="traf-chart-body"><canvas id="ch3"></canvas></div>
-    </div>
-</section>
-<section class="page" id="pg-connections">
-    <div class="topbar">
-        <div><div class="tb-title"><i class="ti ti-plug-connected"></i> اتصالات فعال</div><div class="tb-sub">مانیتورینگ زنده‌ی آی‌پی و ترافیک هر اتصال</div></div>
-        <div class="tb-right"><span class="badge badge-green" id="conns-live">—</span><button class="btn btn-primary btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i> رفرش</button></div>
-    </div>
-    <div class="conn-hero">
-        <div class="conn-hero-tile">
-            <div class="conn-hero-icon"><i class="ti ti-plug-connected"></i></div>
-            <div class="conn-hero-label">اتصالات زنده</div>
-            <div class="conn-hero-val" id="ch-count">—</div>
-        </div>
-        <div class="conn-hero-tile">
-            <div class="conn-hero-icon"><i class="ti ti-transfer"></i></div>
-            <div class="conn-hero-label">مجموع ترافیک لحظه‌ای</div>
-            <div class="conn-hero-val" id="ch-traffic">—</div>
-        </div>
-        <div class="conn-hero-tile">
-            <div class="conn-hero-icon"><i class="ti ti-clock"></i></div>
-            <div class="conn-hero-label">میانگین مدت اتصال</div>
-            <div class="conn-hero-val" id="ch-avgdur">—</div>
-        </div>
-        <div class="conn-hero-tile">
-            <div class="conn-hero-icon"><i class="ti ti-map-pin"></i></div>
-            <div class="conn-hero-label">آی‌پی‌های یکتا</div>
-            <div class="conn-hero-val" id="ch-uniq">—</div>
-        </div>
-    </div>
-    <div class="conn-toolbar">
-        <div class="conn-toolbar-title"><i class="ti ti-list-details"></i> لیست اتصالات</div>
-        <div class="conn-live-badge"><span class="conn-live-dot"></span> بروزرسانی خودکار هر ۵ ثانیه</div>
-    </div>
-    <div class="conn-grid" id="conns-grid"></div>
-    <div class="conn-empty" id="conns-empty" style="display:none">
-        <div class="conn-empty-icon"><i class="ti ti-plug-off"></i></div>
-        <div class="conn-empty-title">هیچ اتصال فعالی نیست</div>
-        <div class="conn-empty-sub">به محض اتصال کلاینت‌ها، اینجا نمایش داده می‌شوند</div>
-    </div>
-</section>
-<section class="page" id="pg-security">
-    <div class="topbar"><div><div class="tb-title"><i class="ti ti-shield-lock"></i> امنیت</div></div></div>
-    <div class="grid-2">
-        <div class="card">
-            <div class="card-title"><i class="ti ti-lock"></i> رمزنگاری</div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-certificate"></i> TLS/HTTPS</span><span class="stat-value" style="color:var(--green-t)">● فعال (443)</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-fingerprint"></i> Fingerprint</span><span class="stat-value">Chrome Spoof</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-network"></i> پروتکل‌ها</span><span class="stat-value">VLESS/WS + XHTTP Ultra</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-key"></i> هش رمز</span><span class="stat-value">SHA-256+Salt</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-cookie"></i> سشن</span><span class="stat-value">HttpOnly · 7 روز</span></div>
-        </div>
-        <div class="card">
-            <div class="card-title"><i class="ti ti-shield-check"></i> کنترل دسترسی</div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-id-badge"></i> UUID Auth سخت‌گیرانه</span><span class="stat-value" style="color:var(--green-t)">● فعال</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-toggle-right"></i> فعال/غیرفعال کانفیگ</span><span class="stat-value" style="color:var(--green-t)">● فعال</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-gauge"></i> سهمیه ترافیک</span><span class="stat-value" style="color:var(--green-t)">● فعال</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-calendar-x"></i> تاریخ انقضا</span><span class="stat-value" style="color:var(--green-t)">● فعال</span></div>
-            <div class="stat-row"><span class="stat-key"><i class="ti ti-lock"></i> رمز صفحه پابلیک ساب</span><span class="stat-value" style="color:var(--green-t)">● اختیاری · SHA-256</span></div>
-        </div>
-    </div>
-</section>
-<section class="page" id="pg-logs">
-    <div class="topbar"><div><div class="tb-title"><i class="ti ti-history"></i> لاگ فعالیت‌ها</div><div class="tb-sub">تاریخچه‌ی کامل رخدادهای پنل</div></div><div class="tb-right"><button class="btn btn-primary btn-sm" onclick="loadActivity()"><i class="ti ti-refresh"></i></button></div></div>
-    <div class="card"><div class="log-timeline" id="logs-list">—</div><div class="empty-state" id="logs-empty" style="display:none"><i class="ti ti-history-toggle"></i><p>هنوز لاگی ثبت نشده</p></div></div>
-</section>
-<section class="page" id="pg-errors">
-    <div class="topbar"><div><div class="tb-title"><i class="ti ti-alert-triangle"></i> خطاها</div></div><div class="tb-right"><span class="badge badge-red" id="errs-badge">۰</span><button class="btn btn-primary btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i></button></div></div>
-    <div class="card"><div class="card-title"><i class="ti ti-bug"></i> لاگ خطاها</div><div id="errs-full">—</div></div>
-</section>
-<section class="page" id="pg-testws">
-    <div class="topbar"><div><div class="tb-title"><i class="ti ti-wifi"></i> تست WebSocket</div></div></div>
-    <div class="card" style="max-width:660px">
-        <div class="info-box info-box-amber" style="margin-top:0;margin-bottom:12px"><i class="ti ti-alert-triangle"></i><span>فقط UUID‌های ثبت‌شده و فعال اتصال برقرار می‌کنند (این فقط تست VLESS/WS است؛ تست XHTTP از خود کلاینت انجام می‌شود).</span></div>
-        <div class="form-row" style="margin-bottom:12px">
-            <div class="form-group" style="flex:1"><label>UUID (باید در کانفیگ‌ها وجود داشته باشد)</label><input class="form-input" id="ws-uuid" placeholder="UUID یک کانفیگ فعال" style="width:100%"></div>
-            <button class="btn btn-primary" onclick="wsConn()"><i class="ti ti-plug-connected"></i> اتصال</button>
-            <button class="btn btn-danger" onclick="wsDisc()"><i class="ti ti-plug-x"></i> قطع</button>
-        </div>
-        <div class="form-row" style="margin-bottom:12px">
-            <input class="form-input" id="ws-msg" placeholder="پیام تست..." style="flex:1">
-            <button class="btn btn-outline" onclick="wsSend()"><i class="ti ti-send"></i> ارسال</button>
-        </div>
-        <div style="background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;height:250px;overflow-y:auto;font-family:ui-monospace,monospace;font-size:10.5px;line-height:1.9" id="ws-log">
-            <p style="color:var(--t3)">منتظر اتصال...</p>
-        </div>
-    </div>
-</section>
-<section class="page" id="pg-settings">
-    <div class="topbar"><div><div class="tb-title"><i class="ti ti-settings"></i> تنظیمات</div></div></div>
-    <div class="grid-2">
-        <div class="srv-panel">
-            <div class="srv-hero">
-                <div class="srv-hero-icon"><i class="ti ti-server-2"></i></div>
-                <div class="srv-hero-text">
-                    <div class="srv-hero-domain" id="set-host">—</div>
-                    <div class="srv-hero-sub"><span class="dot dot-green pulse"></span> آنلاین · Railway</div>
-                </div>
-            </div>
-            <div class="srv-tiles">
-                <div class="srv-tile"><div class="srv-tile-icon"><i class="ti ti-route"></i></div><div class="srv-tile-text"><div class="srv-tile-label">پورت پیش‌فرض</div><div class="srv-tile-val">443 (TLS) · قابل تغییر در هر کانفیگ</div></div></div>
-                <div class="srv-tile"><div class="srv-tile-icon"><i class="ti ti-versions"></i></div><div class="srv-tile-text"><div class="srv-tile-label">نسخه</div><div class="srv-tile-val">v10.2</div></div></div>
-                <div class="srv-tile"><div class="srv-tile-icon"><i class="ti ti-brand-fastapi"></i></div><div class="srv-tile-text"><div class="srv-tile-label">فریم‌ورک</div><div class="srv-tile-val">FastAPI + Uvicorn</div></div></div>
-                <div class="srv-tile"><div class="srv-tile-icon"><i class="ti ti-cloud"></i></div><div class="srv-tile-text"><div class="srv-tile-label">پلتفرم</div><div class="srv-tile-val">Railway</div></div></div>
-                <div class="srv-tile" style="grid-column:1/-1"><div class="srv-tile-icon"><i class="ti ti-device-floppy"></i></div><div class="srv-tile-text"><div class="srv-tile-label">ذخیره‌سازی</div><div class="srv-tile-val">JSON File (/data)</div></div></div>
-            </div>
-        </div>
-        <div class="pw-panel">
-            <div class="pw-hero">
-                <div class="pw-hero-icon"><i class="ti ti-key"></i></div>
-                <div class="pw-hero-text">
-                    <div class="pw-hero-title">تغییر رمز عبور</div>
-                    <div class="pw-hero-sub">رمز قوی انتخاب کنید و آن را جایی امن نگه دارید</div>
-                </div>
-            </div>
-            <div class="pw-body">
-                <div class="pw-field">
-                    <label>رمز فعلی</label>
-                    <input class="pw-input" type="password" id="cp-cur" placeholder="رمز فعلی را وارد کنید">
-                    <button class="pw-eye" type="button" onclick="togglePwField('cp-cur',this)"><i class="ti ti-eye"></i></button>
-                </div>
-                <div class="pw-field" style="margin-bottom:6px">
-                    <label>رمز جدید</label>
-                    <input class="pw-input" type="password" id="cp-new" placeholder="حداقل ۴ کاراکتر" oninput="checkPwStrength(this.value)">
-                    <button class="pw-eye" type="button" onclick="togglePwField('cp-new',this)"><i class="ti ti-eye"></i></button>
-                </div>
-                <div class="pw-strength" id="pw-strength-bar">
-                    <div class="pw-strength-seg"></div><div class="pw-strength-seg"></div><div class="pw-strength-seg"></div><div class="pw-strength-seg"></div>
-                </div>
-                <div class="pw-strength-label" id="pw-strength-label"><i class="ti ti-shield"></i> قدرت رمز</div>
-                <div class="pw-reqs">
-                    <span class="pw-req" id="req-len"><i class="ti ti-circle-dashed"></i> حداقل ۴ کاراکتر</span>
-                    <span class="pw-req" id="req-num"><i class="ti ti-circle-dashed"></i> شامل عدد</span>
-                    <span class="pw-req" id="req-case"><i class="ti ti-circle-dashed"></i> حروف بزرگ/کوچک</span>
-                </div>
-                <div class="pw-field" style="margin-bottom:18px">
-                    <label>تکرار رمز جدید</label>
-                    <input class="pw-input" type="password" id="cp-cf" placeholder="تکرار رمز جدید">
-                    <button class="pw-eye" type="button" onclick="togglePwField('cp-cf',this)"><i class="ti ti-eye"></i></button>
-                </div>
-                <button class="pw-submit" onclick="changePw()"><i class="ti ti-shield-check"></i> ذخیره رمز جدید</button>
-            </div>
-        </div>
-    </div>
-</section>
+    <!-- Pages -->
+    <section class="page active" id="pg-overview">...</section>
+    <section class="page" id="pg-links">...</section>
+    <section class="page" id="pg-subgroups">...</section>
+    <section class="page" id="pg-subscriptions">...</section>
+    <section class="page" id="pg-traffic">...</section>
+    <section class="page" id="pg-connections">...</section>
+    <section class="page" id="pg-security">...</section>
+    <section class="page" id="pg-logs">...</section>
+    <section class="page" id="pg-errors">...</section>
+    <section class="page" id="pg-testws">...</section>
+    <section class="page" id="pg-settings">...</section>
 </main>
+
 <script>
 // ─────────────────────────────────────────────────────────────────────────────
 // THEME
@@ -2905,19 +2726,19 @@ function makeGradient(ctx, color1, color2) {
 
 function initCharts() {
     const c1 = document.getElementById('ch1').getContext('2d');
-    const grad1 = makeGradient(c1, 'rgba(79,70,229,0.38)', 'rgba(79,70,229,0)');
+    const grad1 = makeGradient(c1, 'rgba(99,102,241,0.38)', 'rgba(99,102,241,0)');
     ch1 = new Chart(c1, {
         type: 'line',
         data: { labels: [], datasets: [{
             label: 'MB',
             data: [],
-            borderColor: '#4F46E5',
+            borderColor: '#6366F1',
             backgroundColor: grad1,
             fill: true,
             tension: 0.42,
             pointRadius: 0,
             pointHoverRadius: 6,
-            pointHoverBackgroundColor: '#4F46E5',
+            pointHoverBackgroundColor: '#6366F1',
             pointHoverBorderColor: '#fff',
             pointHoverBorderWidth: 2,
             borderWidth: 2.5
@@ -2930,10 +2751,10 @@ function initCharts() {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: 'rgba(15,22,42,0.96)',
-                    borderColor: 'rgba(79,70,229,0.30)',
+                    borderColor: 'rgba(99,102,241,0.30)',
                     borderWidth: 1,
                     titleColor: '#E8F0FE',
-                    bodyColor: '#8BA0C8',
+                    bodyColor: '#94A3B8',
                     padding: 11,
                     cornerRadius: 10,
                     displayColors: false,
@@ -2943,8 +2764,8 @@ function initCharts() {
                 }
             },
             scales: {
-                x: { grid: { display: false }, border: { display: false }, ticks: { color: '#4A5F85', font: { size: 9, family: 'Vazirmatn' } } },
-                y: { grid: { color: 'rgba(79,70,229,0.06)' }, border: { display: false }, ticks: { color: '#4A5F85', font: { size: 9, family: 'Vazirmatn' }, callback: v => v + ' MB' } }
+                x: { grid: { display: false }, border: { display: false }, ticks: { color: '#475569', font: { size: 9, family: 'Vazirmatn' } } },
+                y: { grid: { color: 'rgba(99,102,241,0.06)' }, border: { display: false }, ticks: { color: '#475569', font: { size: 9, family: 'Vazirmatn' }, callback: v => v + ' MB' } }
             },
             elements: { line: { capBezierPoints: true } }
         }
@@ -2956,8 +2777,8 @@ function initCharts() {
             labels: ['VLESS/WS', 'XHTTP Ultra', 'HTTP Proxy'],
             datasets: [{
                 data: [55, 35, 10],
-                backgroundColor: ['#4F46E5', '#10B981', '#8B5CF6'],
-                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--bg-card') || '#0f1c36',
+                backgroundColor: ['#6366F1', '#10B981', '#8B5CF6'],
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--bg-card') || '#0c1430',
                 borderWidth: 4,
                 hoverOffset: 10,
                 borderRadius: 6,
@@ -2981,7 +2802,7 @@ function initCharts() {
                 },
                 tooltip: {
                     backgroundColor: 'rgba(15,22,42,0.96)',
-                    borderColor: 'rgba(79,70,229,0.30)',
+                    borderColor: 'rgba(99,102,241,0.30)',
                     borderWidth: 1,
                     padding: 10,
                     cornerRadius: 10,
@@ -2995,9 +2816,9 @@ function initCharts() {
     const c3 = document.getElementById('ch3').getContext('2d');
     const grad3 = (() => {
         const g = c3.createLinearGradient(0, 0, 0, 320);
-        g.addColorStop(0, 'rgba(79,70,229,0.45)');
-        g.addColorStop(0.6, 'rgba(79,70,229,0.08)');
-        g.addColorStop(1, 'rgba(79,70,229,0)');
+        g.addColorStop(0, 'rgba(99,102,241,0.45)');
+        g.addColorStop(0.6, 'rgba(99,102,241,0.08)');
+        g.addColorStop(1, 'rgba(99,102,241,0)');
         return g;
     })();
     ch3 = new Chart(c3, {
@@ -3008,14 +2829,14 @@ function initCharts() {
                 {
                     label: 'مصرف',
                     data: [],
-                    borderColor: '#4F46E5',
+                    borderColor: '#6366F1',
                     backgroundColor: grad3,
                     fill: true,
                     tension: 0.45,
                     pointRadius: 0,
                     pointHoverRadius: 7,
                     pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#4F46E5',
+                    pointHoverBorderColor: '#6366F1',
                     pointHoverBorderWidth: 3,
                     borderWidth: 3,
                     order: 2
@@ -3041,10 +2862,10 @@ function initCharts() {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: 'rgba(15,22,42,0.97)',
-                    borderColor: 'rgba(79,70,229,0.35)',
+                    borderColor: 'rgba(99,102,241,0.35)',
                     borderWidth: 1,
                     titleColor: '#E8F0FE',
-                    bodyColor: '#8BA0C8',
+                    bodyColor: '#94A3B8',
                     padding: 13,
                     cornerRadius: 12,
                     displayColors: true,
@@ -3055,8 +2876,8 @@ function initCharts() {
                 }
             },
             scales: {
-                x: { grid: { display: false }, border: { display: false }, ticks: { color: '#4A5F85', font: { size: 9.5, family: 'Vazirmatn' }, maxRotation: 0 } },
-                y: { grid: { color: 'rgba(79,70,229,0.05)' }, border: { display: false }, ticks: { color: '#4A5F85', font: { size: 9.5, family: 'Vazirmatn' }, callback: v => v + ' MB' } }
+                x: { grid: { display: false }, border: { display: false }, ticks: { color: '#475569', font: { size: 9.5, family: 'Vazirmatn' }, maxRotation: 0 } },
+                y: { grid: { color: 'rgba(99,102,241,0.05)' }, border: { display: false }, ticks: { color: '#475569', font: { size: 9.5, family: 'Vazirmatn' }, callback: v => v + ' MB' } }
             }
         }
     });
@@ -3793,7 +3614,7 @@ let ws;
 function wsLog(c, m) {
     const l = document.getElementById('ws-log');
     const p = document.createElement('p');
-    const colors = { ok: '#34D399', err: '#F87171', info: '#8BA0C8', sent: '#FCD34D' };
+    const colors = { ok: '#34D399', err: '#F87171', info: '#94A3B8', sent: '#FCD34D' };
     p.style.color = colors[c] || '#fff';
     p.textContent = '[' + new Date().toLocaleTimeString('fa-IR') + '] ' + m;
     l.appendChild(p);
@@ -3883,10 +3704,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 # =============================================================================
-# PUBLIC SUB PAGE - نسخه کامل
+# PUBLIC SUB PAGE
 # =============================================================================
 def get_public_page_html(uuid_key: str) -> str:
-    """صفحه پابلیک ساب v3 — طراحی حرفه‌ای"""
+    """صفحه پابلیک ساب - طراحی مدرن"""
     return f"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -3898,68 +3719,69 @@ def get_public_page_html(uuid_key: str) -> str:
 <style>
 *{{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}}
 :root{{
-  --bg:#080e1e;--bg2:#0c162e;--bg3:#111e3a;
-  --card:#0f1c36;--card-b:rgba(79,70,229,0.14);--card-bh:rgba(79,70,229,0.30);
-  --accent:#4F46E5;--accent2:#6366F1;--accent3:#818CF8;--accent-d:rgba(79,70,229,0.10);
-  --green:#1FB87E;--green-bg:rgba(31,184,126,0.10);--green-t:#3FD79C;
-  --red:#EF4444;--red-bg:rgba(239,68,68,0.10);--red-t:#FB8585;
-  --amber:#F2A33D;--amber-bg:rgba(242,163,61,0.10);--amber-t:#F9C988;
-  --purple:#9D7BF0;--purple-bg:rgba(157,123,240,0.10);--purple-t:#BCA4F7;
-  --t1:#E8F0FE;--t2:#8BA0C8;--t3:#4A5F85;
-  --radius:18px;--shadow:0 12px 44px rgba(0,0,0,0.50);
+  --bg:#080c1a;--bg2:#0c1430;--bg3:#101a3a;
+  --card:rgba(12,20,44,0.60);--card-b:rgba(99,102,241,0.12);--card-bh:rgba(99,102,241,0.28);
+  --accent:#6366F1;--accent2:#818CF8;--accent3:#A5B4FC;--accent-d:rgba(99,102,241,0.08);
+  --green:#10B981;--green-bg:rgba(16,185,129,0.08);--green-t:#34D399;
+  --red:#EF4444;--red-bg:rgba(239,68,68,0.08);--red-t:#F87171;
+  --amber:#F59E0B;--amber-bg:rgba(245,158,11,0.08);--amber-t:#FCD34D;
+  --purple:#8B5CF6;--purple-bg:rgba(139,92,246,0.08);--purple-t:#A78BFA;
+  --t1:#E8F0FE;--t2:#94A3B8;--t3:#475569;
+  --radius:20px;--shadow:0 16px 52px rgba(0,0,0,0.45);
+  --shadow-inner:inset 0 2px 4px rgba(255,255,255,0.04), inset 0 -2px 4px rgba(0,0,0,0.20);
   --font:'Vazirmatn',sans-serif;
 }}
 [data-theme="light"]{{
-  --bg:#ECF2FB;--bg2:#DEE8F7;--bg3:#CFDCF2;
-  --card:#FFFFFF;--card-b:rgba(67,56,202,0.14);--card-bh:rgba(67,56,202,0.32);
-  --accent:#4338CA;--accent2:#4F46E5;--accent3:#6366F1;--accent-d:rgba(67,56,202,0.08);
-  --green:#0E9A6A;--green-bg:rgba(14,154,106,0.08);--green-t:#0A7553;
-  --red:#DC2626;--red-bg:rgba(220,38,38,0.08);--red-t:#A51E1E;
-  --amber:#C97A12;--amber-bg:rgba(201,122,18,0.08);--amber-t:#8F5A0C;
-  --purple:#7350D6;--purple-bg:rgba(115,80,214,0.08);--purple-t:#5A3CAD;
+  --bg:#E8EEF8;--bg2:#DCE4F2;--bg3:#CED8EC;
+  --card:rgba(255,255,255,0.55);--card-b:rgba(79,70,229,0.10);--card-bh:rgba(79,70,229,0.22);
+  --accent:#4F46E5;--accent2:#6366F1;--accent3:#818CF8;--accent-d:rgba(79,70,229,0.06);
+  --green:#059669;--green-bg:rgba(5,150,105,0.06);--green-t:#065F46;
+  --red:#DC2626;--red-bg:rgba(220,38,38,0.06);--red-t:#991B1B;
+  --amber:#D97706;--amber-bg:rgba(217,119,6,0.06);--amber-t:#92400E;
+  --purple:#7C3AED;--purple-bg:rgba(124,58,237,0.06);--purple-t:#7C3AED;
   --t1:#0F172A;--t2:#334155;--t3:#64748B;
-  --shadow:0 12px 36px rgba(0,0,0,0.10);
+  --shadow:0 16px 44px rgba(0,0,0,0.06);
+  --shadow-inner:inset 0 2px 4px rgba(255,255,255,0.40), inset 0 -2px 4px rgba(0,0,0,0.04);
 }}
 html,body{{min-height:100%;background:var(--bg);font-family:var(--font);color:var(--t1);font-size:14px;transition:background .35s,color .35s}}
-.bg-fx{{position:fixed;inset:0;background:radial-gradient(ellipse 70% 45% at 50% -8%,rgba(79,70,229,0.12),transparent 62%),var(--bg);z-index:0;pointer-events:none;transition:background .35s}}
-.grid-fx{{position:fixed;inset:0;background-image:linear-gradient(rgba(79,70,229,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(79,70,229,0.025) 1px,transparent 1px);background-size:46px 46px;z-index:0;pointer-events:none}}
+.bg-fx{{position:fixed;inset:0;background:radial-gradient(ellipse 70% 45% at 50% -8%,rgba(99,102,241,0.10),transparent 62%),var(--bg);z-index:0;pointer-events:none;transition:background .35s}}
 .wrap{{position:relative;z-index:10;max-width:800px;margin:0 auto;padding:24px 16px 64px}}
 .top{{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;gap:10px}}
 .brand{{display:flex;align-items:center;gap:11px;min-width:0}}
-.brand-img{{width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--card-b);box-shadow:0 0 16px rgba(79,70,229,0.30);flex-shrink:0}}
+.brand-img{{width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--card-b);box-shadow:0 0 16px rgba(99,102,241,0.30);flex-shrink:0}}
 .brand-img img{{width:100%;height:100%;object-fit:cover}}
 .brand-name{{font-size:14.5px;font-weight:800;color:var(--t1);letter-spacing:-.01em}}
 .brand-sub{{font-size:9.5px;color:var(--t3);font-weight:500}}
 .top-actions{{display:flex;align-items:center;gap:6px;flex-shrink:0}}
-.icon-btn{{width:36px;height:36px;border-radius:11px;background:var(--card);border:1px solid var(--card-b);color:var(--t2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:.18s}}
+.icon-btn{{width:36px;height:36px;border-radius:var(--radius-sm,12px);background:var(--card);border:1px solid var(--card-b);color:var(--t2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:.18s;backdrop-filter:blur(12px)}}
 .icon-btn:hover{{background:var(--accent-d);color:var(--accent2);border-color:var(--card-bh)}}
-.sub-info{{background:var(--card);border:1px solid var(--card-b);border-radius:22px;padding:24px 24px 22px;margin-bottom:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}}
-.sub-info::before{{content:'';position:absolute;top:0;right:0;width:160px;height:160px;background:radial-gradient(circle at top right,rgba(79,70,229,0.08),transparent 72%);pointer-events:none}}
+.sub-info{{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--card-b);border-radius:var(--radius);padding:24px 24px 22px;margin-bottom:16px;box-shadow:var(--shadow),var(--shadow-inner);position:relative;overflow:hidden}}
+.sub-info::before{{content:'';position:absolute;top:0;right:0;width:160px;height:160px;background:radial-gradient(circle at top right,rgba(99,102,241,0.06),transparent 72%);pointer-events:none}}
 .sub-eyebrow{{font-size:10px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;display:flex;align-items:center;gap:6px}}
 .sub-eyebrow i{{font-size:13px}}
 .sub-name{{font-size:23px;font-weight:800;color:var(--t1);margin-bottom:6px;letter-spacing:-.02em}}
 .sub-desc{{font-size:12.5px;color:var(--t2);line-height:1.8;margin-bottom:14px}}
 .sub-meta-row{{font-size:10.5px;color:var(--t3);margin-bottom:14px;display:flex;align-items:center;gap:6px}}
-.sub-sub-box{{background:var(--accent-d);border:1px solid var(--card-b);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}}
+.sub-sub-box{{background:var(--accent-d);border:1px solid var(--card-b);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;backdrop-filter:blur(8px)}}
 .sub-sub-url{{font-family:ui-monospace,monospace;font-size:10px;color:var(--accent2);word-break:break-all;flex:1;min-width:140px}}
 .stats-bar{{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}}
-.stat-card{{background:var(--card);border:1px solid var(--card-b);border-radius:16px;padding:16px 17px;transition:.2s}}
-.stat-card:hover{{border-color:var(--card-bh);transform:translateY(-1px)}}
+.stat-card{{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--card-b);border-radius:var(--radius-sm,12px);padding:16px 17px;transition:.2s;box-shadow:var(--shadow-inner)}}
+.stat-card:hover{{border-color:var(--card-bh);transform:translateY(-2px)}}
 .stat-label{{font-size:9px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}}
 .stat-val{{font-size:22px;font-weight:800;color:var(--t1);line-height:1;letter-spacing:-.01em}}
 .stat-sub{{font-size:9.5px;color:var(--t3);margin-top:6px}}
-.copy-all-bar{{display:flex;align-items:center;gap:12px;background:linear-gradient(120deg,var(--accent) 0%,#4338CA 100%);border-radius:18px;padding:16px 19px;margin-bottom:18px;box-shadow:0 10px 30px rgba(79,70,229,0.28);flex-wrap:wrap}}
+.copy-all-bar{{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:var(--radius);padding:16px 19px;margin-bottom:18px;box-shadow:0 8px 32px var(--accent-glow),var(--shadow-inner);flex-wrap:wrap}}
 .copy-all-text{{flex:1;min-width:160px}}
 .copy-all-title{{font-size:13.5px;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px}}
 .copy-all-sub{{font-size:10px;color:rgba(255,255,255,.78);margin-top:3px}}
-.copy-all-btn{{background:#fff;color:#4338CA;border:none;border-radius:12px;padding:10px 19px;font-family:var(--font);font-size:12.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.18s;white-space:nowrap}}
-.copy-all-btn:hover{{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.22)}}
-.copy-all-btn:active{{transform:translateY(0) scale(.98)}}
+.copy-all-btn{{background:#fff;color:var(--accent);border:none;border-radius:12px;padding:10px 19px;font-family:var(--font);font-size:12.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.18s;white-space:nowrap}}
+.copy-all-btn:hover{{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.20)}}
+.copy-all-btn:active{{transform:translateY(0) scale(.97)}}
 .cfg-title{{font-size:12px;font-weight:800;color:var(--t2);margin-bottom:13px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.07em}}
 .cfg-title i{{color:var(--accent);font-size:15px}}
 .cfg-grid{{display:grid;gap:13px}}
-.cfg-card{{background:var(--card);border:1px solid var(--card-b);border-radius:18px;transition:all .2s;position:relative;overflow:hidden}}
-.cfg-card:hover{{border-color:var(--card-bh);box-shadow:var(--shadow)}}
+.cfg-card{{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--card-b);border-radius:var(--radius);transition:all .2s;position:relative;overflow:hidden;box-shadow:var(--shadow-inner)}}
+.cfg-card:hover{{border-color:var(--card-bh);box-shadow:var(--shadow),var(--shadow-inner)}}
 .cfg-top{{padding:17px 19px 15px;position:relative}}
 .cfg-top::after{{content:'';position:absolute;top:0;right:0;width:3px;height:100%;background:var(--green)}}
 .cfg-card.inactive .cfg-top::after{{background:var(--red)}}
@@ -3974,7 +3796,7 @@ html,body{{min-height:100%;background:var(--bg);font-family:var(--font);color:va
 .cfg-status.ok{{background:var(--green-bg);color:var(--green-t)}}
 .cfg-status.no{{background:var(--red-bg);color:var(--red-t)}}
 .cfg-usage{{margin-bottom:4px}}
-.ubar{{height:6px;border-radius:4px;background:rgba(79,70,229,0.08);overflow:hidden;margin-bottom:5px}}
+.ubar{{height:6px;border-radius:4px;background:rgba(99,102,241,0.06);overflow:hidden;margin-bottom:5px}}
 .ubar-f{{height:100%;border-radius:4px;transition:width .5s ease}}
 .utxt{{font-size:10px;color:var(--t3);display:flex;justify-content:space-between}}
 .cfg-tear{{position:relative;height:0;border-top:1.5px dashed var(--card-b);margin:0 19px}}
@@ -3982,7 +3804,7 @@ html,body{{min-height:100%;background:var(--bg);font-family:var(--font);color:va
 .cfg-tear::before{{right:-28px}}
 .cfg-tear::after{{left:-28px}}
 .cfg-bottom{{padding:15px 19px 18px}}
-.cfg-link-toggle{{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:transparent;border:1px dashed var(--card-b);border-radius:11px;padding:10px 13px;cursor:pointer;font-family:var(--font);color:var(--t2);font-size:11.5px;font-weight:600;transition:.15s}}
+.cfg-link-toggle{{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:transparent;border:1px dashed var(--card-b);border-radius:12px;padding:10px 13px;cursor:pointer;font-family:var(--font);color:var(--t2);font-size:11.5px;font-weight:600;transition:.15s}}
 .cfg-link-toggle:hover{{background:var(--accent-d);border-color:var(--card-bh);color:var(--accent2)}}
 .cfg-link-toggle .ltl{{display:flex;align-items:center;gap:7px}}
 .cfg-link-toggle i.ti-chevron-down{{transition:transform .2s}}
@@ -3990,51 +3812,51 @@ html,body{{min-height:100%;background:var(--bg);font-family:var(--font);color:va
 .cfg-vless-wrap{{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease}}
 .cfg-vless-wrap.open{{grid-template-rows:1fr}}
 .cfg-vless-inner{{overflow:hidden}}
-.cfg-vless{{background:rgba(0,0,0,.22);border:1px solid var(--card-b);border-radius:10px;padding:11px 13px;font-size:9.8px;font-family:ui-monospace,monospace;color:var(--accent2);word-break:break-all;line-height:1.7;margin-top:9px;max-height:90px;overflow-y:auto}}
-[data-theme="light"] .cfg-vless{{background:rgba(67,56,202,.05)}}
+.cfg-vless{{background:rgba(0,0,0,.18);border:1px solid var(--card-b);border-radius:10px;padding:11px 13px;font-size:9.8px;font-family:ui-monospace,monospace;color:var(--accent2);word-break:break-all;line-height:1.7;margin-top:9px;max-height:90px;overflow-y:auto}}
+[data-theme="light"] .cfg-vless{{background:rgba(0,0,0,.04)}}
 .cfg-actions{{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}}
 .btn{{font-family:var(--font);font-size:11.5px;font-weight:700;border-radius:10px;padding:8px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;border:none;transition:all .15s;white-space:nowrap}}
 .btn i{{font-size:13px}}
-.btn-p{{background:linear-gradient(135deg,#4F46E5,#6366F1);color:#fff;box-shadow:0 3px 14px rgba(79,70,229,.35)}}
-.btn-p:hover{{background:var(--accent2)}}
-.btn-g{{background:var(--accent-d);color:var(--accent2);border:1px solid rgba(79,70,229,.16)}}
-.btn-g:hover{{background:rgba(79,70,229,.20)}}
-.btn-pur{{background:var(--purple-bg);color:var(--purple-t);border:1px solid rgba(157,123,240,.20)}}
-.btn-pur:hover{{background:rgba(157,123,240,.22)}}
+.btn-p{{background:linear-gradient(135deg,#6366F1,#818CF8);color:#fff;box-shadow:0 4px 16px rgba(99,102,241,.30)}}
+.btn-p:hover{{transform:translateY(-2px)}}
+.btn-g{{background:var(--accent-d);color:var(--accent2);border:1px solid rgba(99,102,241,.14)}}
+.btn-g:hover{{background:rgba(99,102,241,.18)}}
+.btn-pur{{background:var(--purple-bg);color:var(--purple-t);border:1px solid rgba(139,92,246,.14)}}
+.btn-pur:hover{{background:rgba(139,92,246,.18)}}
 .conn-chip{{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;padding:3px 8px;border-radius:20px;background:var(--green-bg);color:var(--green-t);font-weight:700}}
 .dot{{width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}}
 @keyframes pulse{{0%,100%{{opacity:1}}50%{{opacity:.25}}}}
 .lock-stage{{display:flex;align-items:center;justify-content:center;min-height:78vh;padding:20px 0}}
-.lock-card{{background:var(--card);border:1px solid var(--card-b);border-radius:26px;padding:0;text-align:center;max-width:380px;width:100%;box-shadow:var(--shadow);overflow:hidden;position:relative}}
-.lock-banner{{background:linear-gradient(150deg,rgba(79,70,229,.16),rgba(79,70,229,.02) 70%);padding:38px 30px 26px;position:relative}}
-.lock-shield{{width:64px;height:64px;border-radius:18px;background:var(--accent-d);border:1px solid var(--card-bh);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative}}
-.lock-shield::after{{content:'';position:absolute;inset:-7px;border-radius:22px;border:1px solid var(--card-b);animation:breathe 2.6s ease-in-out infinite}}
+.lock-card{{background:var(--card);backdrop-filter:blur(24px);border:1px solid var(--card-b);border-radius:var(--radius);padding:0;text-align:center;max-width:380px;width:100%;box-shadow:var(--shadow),var(--shadow-inner);overflow:hidden;position:relative}}
+.lock-banner{{background:linear-gradient(150deg,rgba(99,102,241,.12),rgba(99,102,241,.02) 70%);padding:38px 30px 26px;position:relative}}
+.lock-shield{{width:64px;height:64px;border-radius:var(--radius-sm,12px);background:var(--accent-d);border:1px solid var(--card-bh);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative}}
+.lock-shield::after{{content:'';position:absolute;inset:-7px;border-radius:16px;border:1px solid var(--card-b);animation:breathe 2.6s ease-in-out infinite}}
 @keyframes breathe{{0%,100%{{transform:scale(1);opacity:.5}}50%{{transform:scale(1.08);opacity:0}}}}
 .lock-shield i{{font-size:28px;color:var(--accent2)}}
 .lock-title{{font-size:18px;font-weight:800;margin-bottom:6px;color:var(--t1);letter-spacing:-.01em}}
 .lock-sub{{font-size:12px;color:var(--t3);line-height:1.7}}
 .lock-form{{padding:24px 30px 30px}}
 .lock-field{{position:relative;margin-bottom:13px}}
-.lock-inp{{width:100%;padding:13px 44px 13px 44px;border-radius:13px;border:1px solid var(--card-b);background:rgba(0,0,0,.20);color:var(--t1);font-family:var(--font);font-size:14px;outline:none;text-align:center;letter-spacing:.14em;transition:.18s}}
-[data-theme="light"] .lock-inp{{background:rgba(67,56,202,.04)}}
-.lock-inp:focus{{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-d)}}
+.lock-inp{{width:100%;padding:13px 44px 13px 44px;border-radius:var(--radius-sm,12px);border:1px solid var(--card-b);background:rgba(0,0,0,.14);color:var(--t1);font-family:var(--font);font-size:14px;outline:none;text-align:center;letter-spacing:.14em;transition:.18s}}
+[data-theme="light"] .lock-inp{{background:rgba(255,255,255,.30)}}
+.lock-inp:focus{{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-d)}}
 .lock-eye{{position:absolute;left:13px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;display:flex}}
 .lock-eye:hover{{color:var(--accent2)}}
 .lock-lockicon{{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:15px;pointer-events:none}}
 .lock-err{{color:var(--red-t);font-size:11.5px;margin-bottom:10px;min-height:16px;display:flex;align-items:center;justify-content:center;gap:5px}}
-.lock-btn{{width:100%;justify-content:center;padding:13px;font-size:13px;border-radius:13px}}
+.lock-btn{{width:100%;justify-content:center;padding:13px;font-size:13px;border-radius:var(--radius-sm,12px)}}
 .lock-footer{{padding:14px 30px;border-top:1px solid var(--card-b);font-size:10px;color:var(--t3);display:flex;align-items:center;justify-content:center;gap:6px}}
 .empty-state{{text-align:center;padding:80px 20px;color:var(--t3)}}
 .empty-state i{{font-size:38px;display:block;margin-bottom:14px}}
-.toast{{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--card);border:1px solid var(--card-b);color:var(--t1);border-radius:12px;padding:10px 20px;font-size:12.5px;font-weight:600;opacity:0;transition:all .25s;z-index:999;pointer-events:none;display:flex;align-items:center;gap:7px;box-shadow:var(--shadow);white-space:nowrap}}
+.toast{{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--card-b);color:var(--t1);border-radius:12px;padding:10px 20px;font-size:12.5px;font-weight:600;opacity:0;transition:all .25s;z-index:999;pointer-events:none;display:flex;align-items:center;gap:7px;box-shadow:var(--shadow),var(--shadow-inner);white-space:nowrap}}
 .toast.show{{opacity:1;transform:translateX(-50%) translateY(0)}}
-.toast.ok{{border-color:rgba(31,184,126,.35);background:var(--green-bg);color:var(--green-t)}}
-.qr-modal{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:600;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:20px}}
+.toast.ok{{border-color:rgba(16,185,129,.25);background:var(--green-bg);color:var(--green-t)}}
+.qr-modal{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.70);z-index:600;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:20px}}
 .qr-modal.open{{display:flex}}
-.qr-box{{background:var(--card);border:1px solid var(--card-b);border-radius:22px;padding:26px;text-align:center;max-width:340px;width:100%;box-shadow:var(--shadow)}}
+.qr-box{{background:var(--card);backdrop-filter:blur(24px);border:1px solid var(--card-b);border-radius:var(--radius);padding:26px;text-align:center;max-width:340px;width:100%;box-shadow:var(--shadow),var(--shadow-inner)}}
 .qr-title{{font-size:13.5px;font-weight:800;margin-bottom:16px;color:var(--t1)}}
-.qr-img{{border-radius:14px;overflow:hidden;margin-bottom:15px}}
-.qr-img img{{width:100%;display:block;background:#fff;padding:10px;border-radius:14px}}
+.qr-img{{border-radius:var(--radius-sm,12px);overflow:hidden;margin-bottom:15px}}
+.qr-img img{{width:100%;display:block;background:#fff;padding:10px;border-radius:var(--radius-sm,12px)}}
 .footer{{text-align:center;padding-top:28px;font-size:10.5px;color:var(--t3)}}
 @media(max-width:520px){{
   .stats-bar{{grid-template-columns:1fr 1fr}}
@@ -4047,10 +3869,15 @@ html,body{{min-height:100%;background:var(--bg);font-family:var(--font);color:va
   .lock-form{{padding:20px 22px 26px}}
 }}
 @keyframes spin{{to{{transform:rotate(360deg)}}}}
+@keyframes fadeSlide{{
+  from{{opacity:0;transform:translateY(12px)}}
+  to{{opacity:1;transform:translateY(0)}}
+}}
+.card{{animation:fadeSlide 0.5s ease}}
 </style>
 </head>
 <body>
-<div class="bg-fx"></div><div class="grid-fx"></div>
+<div class="bg-fx"></div>
 <div class="toast" id="toast"></div>
 <div class="qr-modal" id="qr-modal" onclick="this.classList.remove('open')">
   <div class="qr-box" onclick="event.stopPropagation()">
@@ -4063,7 +3890,7 @@ html,body{{min-height:100%;background:var(--bg);font-family:var(--font);color:va
   <div class="top">
     <div class="brand">
       <div class="brand-img"><img src="https://uploadkon.ir/uploads/7e7c16_26InShot-20260628-102209067.jpg" alt="SpaceZone"></div>
-      <div><div class="brand-name">SpaceZone</div><div class="brand-sub">v10.2</div></div>
+      <div><div class="brand-name">SpaceZone</div><div class="brand-sub">v10.3 · مدرن</div></div>
     </div>
     <div class="top-actions">
       <button class="icon-btn" id="theme-toggle" onclick="toggleTheme()" title="تغییر تم"><i class="ti ti-sun" id="theme-icon"></i></button>
@@ -4072,215 +3899,36 @@ html,body{{min-height:100%;background:var(--bg);font-family:var(--font);color:va
   <div id="root">
     <div class="empty-state"><i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i>در حال بارگذاری...</div>
   </div>
-  <div class="footer">SpaceZone v10.2</div>
+  <div class="footer">SpaceZone v10.3 · طراحی مدرن</div>
 </div>
 <script>
 const UUID_KEY='{uuid_key}';
 let savedPw='';
 let isDark=localStorage.getItem('x4g-pub-theme')!=='light';
-function applyTheme(dark){{
-  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
-  document.getElementById('theme-icon').className='ti '+(dark?'ti-sun':'ti-moon');
-}}
-function toggleTheme(){{isDark=!isDark;localStorage.setItem('x4g-pub-theme',isDark?'dark':'light');applyTheme(isDark)}}
+function applyTheme(dark){{document.documentElement.setAttribute('data-theme',dark?'dark':'light');document.getElementById('theme-icon').className='ti '+(dark?'ti-sun':'ti-moon');}}
+function toggleTheme(){{isDark=!isDark;localStorage.setItem('x4g-pub-theme',isDark?'dark':'light');applyTheme(isDark);}}
 applyTheme(isDark);
-function toast(msg,type=''){{
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast show'+(type?' '+type:'');
-  setTimeout(()=>t.classList.remove('show'),2400);
-}}
-function esc(s){{return String(s||'').replace(/[&<>"']/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[c]))}}
-function fmtB(b){{if(!b||b===0)return '0 B';if(b<1024)return b+' B';if(b<1024**2)return (b/1024).toFixed(1)+' KB';if(b<1024**3)return (b/1024**2).toFixed(2)+' MB';return (b/1024**3).toFixed(2)+' GB'}}
-function toFa(n){{return String(n).replace(/\\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d])}}
-function protoChip(p){{
-  if(p==='xhttp-stream-one')return '<span class="proto-chip pc-ultra"><i class="ti ti-bolt"></i> XHTTP ULTRA</span>';
-  if(p&&p.startsWith('xhttp'))return '<span class="proto-chip pc-xhttp">'+esc(p)+'</span>';
-  return '<span class="proto-chip pc-ws">VLESS · WS</span>';
-}}
-function showQR(label,link){{
-  document.getElementById('qr-label').textContent=label;
-  document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=260x260&data='+encodeURIComponent(link);
-  document.getElementById('qr-modal').classList.add('open');
-}}
-function toggleLink(i){{
-  const wrap=document.getElementById('vw-'+i);
-  const btn=document.getElementById('vt-'+i);
-  const open=wrap.classList.toggle('open');
-  btn.classList.toggle('open',open);
-  btn.querySelector('.ltl span').textContent = open ? 'پنهان کردن لینک' : 'نمایش لینک کانفیگ';
-}}
-async function loadData(pw=''){{
-  const url='/api/public/sub/'+UUID_KEY+(pw?'?pw='+encodeURIComponent(pw):'');
-  const r=await fetch(url);
-  return r.json();
-}}
-function renderLock(name,errMsg=''){{
-  document.getElementById('root').innerHTML=`
-    <div class="lock-stage">
-      <div class="lock-card">
-        <div class="lock-banner">
-          <div class="lock-shield"><i class="ti ti-shield-lock"></i></div>
-          <div class="lock-title">${{esc(name)}}</div>
-          <div class="lock-sub">این گروه با رمز محافظت شده. برای دیدن کانفیگ‌ها رمز رو وارد کنید.</div>
-        </div>
-        <div class="lock-form">
-          <div class="lock-err" id="lock-err">${{errMsg ? '<i class="ti ti-alert-circle"></i> '+esc(errMsg) : ''}}</div>
-          <div class="lock-field">
-            <i class="ti ti-lock lock-lockicon"></i>
-            <input class="lock-inp" type="password" id="lock-pw" placeholder="••••••••" autofocus>
-            <button class="lock-eye" type="button" onclick="togglePwVis()"><i class="ti ti-eye" id="lock-eye-icon"></i></button>
-          </div>
-          <button class="btn btn-p lock-btn" onclick="submitLock()"><i class="ti ti-lock-open"></i> ورود به گروه</button>
-        </div>
-        <div class="lock-footer"><i class="ti ti-shield-check"></i> اتصال شما رمزنگاری‌شده است</div>
-      </div>
-    </div>
-  `;
-  const inp=document.getElementById('lock-pw');
-  inp.addEventListener('keydown',e=>{{if(e.key==='Enter')submitLock()}});
-}}
-function togglePwVis(){{
-  const inp=document.getElementById('lock-pw');
-  const icon=document.getElementById('lock-eye-icon');
-  const toText = inp.type==='password';
-  inp.type = toText ? 'text' : 'password';
-  icon.className = 'ti '+(toText ? 'ti-eye-off' : 'ti-eye');
-}}
-async function submitLock(){{
-  const pw=document.getElementById('lock-pw').value;
-  const data=await loadData(pw);
-  if(data.locked){{renderLock(data.name,'رمز اشتباه است');return}}
-  savedPw=pw;
-  renderContent(data);
-}}
-function renderContent(d){{
-  const activeCount=d.links.filter(l=>l.active).length;
-  const baseSubUrl = d.sub_url || (window.location.protocol + '//' + window.location.host + '/sub-group/' + UUID_KEY);
-  const subUrl = baseSubUrl + (savedPw ? '?pw=' + encodeURIComponent(savedPw) : '');
-  window._x4gSubUrl  = subUrl;
-  window._x4gSubName = d.name;
-  window._x4gLinks   = d.links.map(l => ({{
-    vless : l.vless_link,
-    sub   : l.sub_url + (savedPw ? '?pw=' + encodeURIComponent(savedPw) : ''),
-    label : l.label,
-  }}));
-  document.getElementById('root').innerHTML=`
-    <div class="sub-info">
-      <div class="sub-eyebrow"><i class="ti ti-folders"></i> گروه دسترسی</div>
-      <div class="sub-name">${{esc(d.name)}}</div>
-      ${{d.desc ? `<div class="sub-desc">${{esc(d.desc)}}</div>` : ''}}
-      <div class="sub-meta-row"><i class="ti ti-clock"></i> آخرین بروزرسانی: ${{new Date().toLocaleTimeString('fa-IR')}}</div>
-      <div class="sub-sub-box">
-        <span class="sub-sub-url">${{esc(subUrl)}}</span>
-        <button class="btn btn-pur" style="padding:7px 12px;font-size:10.5px"
-          onclick="navigator.clipboard.writeText(window._x4gSubUrl).then(()=>toast('لینک ساب کپی شد ✓','ok'))">
-          <i class="ti ti-copy"></i> کپی لینک ساب
-        </button>
-        <button class="btn btn-g" style="padding:7px 12px;font-size:10.5px"
-          onclick="showQR(window._x4gSubName + ' — کل گروه', window._x4gSubUrl)">
-          <i class="ti ti-qrcode"></i> QR کل
-        </button>
-      </div>
-    </div>
-    <div class="copy-all-bar">
-      <div class="copy-all-text">
-        <div class="copy-all-title"><i class="ti ti-copy"></i> کپی همه‌ی کانفیگ‌ها</div>
-        <div class="copy-all-sub">تمام لینک‌های فعال این گروه را یک‌جا کپی کن</div>
-      </div>
-      <button class="copy-all-btn" onclick="copyAllConfigs()"><i class="ti ti-clipboard-copy"></i> کپی همه (${{toFa(activeCount)}})</button>
-    </div>
-    <div class="stats-bar">
-      <div class="stat-card">
-        <div class="stat-label">کانفیگ‌های فعال</div>
-        <div class="stat-val">${{toFa(activeCount)}}</div>
-        <div class="stat-sub">از ${{toFa(d.links.length)}} کانفیگ</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">اتصالات زنده</div>
-        <div class="stat-val">${{toFa(d.active_connections)}}</div>
-        <div class="stat-sub" style="color:var(--green-t);display:flex;align-items:center;gap:4px"><span class="dot"></span> آنلاین</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">کل مصرف</div>
-        <div class="stat-val" style="font-size:17px;margin-top:3px">${{esc(d.total_used_fmt)}}</div>
-        <div class="stat-sub">همه کانفیگ‌ها</div>
-      </div>
-    </div>
-    <div class="cfg-title"><i class="ti ti-link"></i> کانفیگ‌ها (${{toFa(d.links.length)}} عدد)</div>
-    <div class="cfg-grid">
-      ${{d.links.map((l, i) => {{
-        const pct = l.limit_bytes === 0 ? 0 : Math.min(100, l.used_bytes / l.limit_bytes * 100);
-        const bc  = pct > 90 ? 'var(--red)' : pct > 70 ? 'var(--amber)' : 'var(--green)';
-        const lim = l.limit_bytes === 0 ? '∞' : fmtB(l.limit_bytes);
-        return `
-          <div class="cfg-card${{l.active ? '' : ' inactive'}}">
-            <div class="cfg-top">
-              <div class="cfg-head">
-                <div>
-                  <div class="cfg-label">${{esc(l.label)}}</div>
-                  <div class="cfg-badges">
-                    ${{protoChip(l.protocol)}}
-                    ${{l.connections > 0 ? `<span class="conn-chip"><span class="dot"></span> ${{toFa(l.connections)}} اتصال</span>` : ''}}
-                  </div>
-                </div>
-                <span class="cfg-status ${{l.active ? 'ok' : 'no'}}">${{l.active ? '<i class="ti ti-circle-check"></i> فعال' : '<i class="ti ti-circle-x"></i> غیرفعال'}}</span>
-              </div>
-              <div class="cfg-usage">
-                <div class="ubar"><div class="ubar-f" style="width:${{pct}}%;background:${{bc}}"></div></div>
-                <div class="utxt"><span>${{esc(l.used_fmt)}} مصرف شده</span><span>سهمیه: ${{lim}}</span></div>
-              </div>
-            </div>
-            <div class="cfg-tear"></div>
-            <div class="cfg-bottom">
-              <button class="cfg-link-toggle" id="vt-${{i}}" onclick="toggleLink(${{i}})">
-                <span class="ltl"><i class="ti ti-eye"></i> <span>نمایش لینک کانفیگ</span></span>
-                <i class="ti ti-chevron-down"></i>
-              </button>
-              <div class="cfg-vless-wrap" id="vw-${{i}}">
-                <div class="cfg-vless-inner">
-                  <div class="cfg-vless">${{esc(l.vless_link)}}</div>
-                </div>
-              </div>
-              <div class="cfg-actions">
-                <button class="btn btn-p"
-                  onclick="navigator.clipboard.writeText(window._x4gLinks[${{i}}].vless).then(()=>toast('لینک کپی شد ✓','ok'))">
-                  <i class="ti ti-copy"></i> کپی لینک
-                </button>
-                <button class="btn btn-g"
-                  onclick="showQR(window._x4gLinks[${{i}}].label, window._x4gLinks[${{i}}].vless)">
-                  <i class="ti ti-qrcode"></i> QR
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }}).join('')}}
-    </div>
-  `;
-  setTimeout(() => autoRefresh(), 30000);
-}}
-function copyAllConfigs(){{
-  const links=window._x4gLinks||[];
-  if(!links.length){{toast('کانفیگی برای کپی نیست','');return}}
-  const text=links.map(l=>l.vless).join('\\n');
-  navigator.clipboard.writeText(text).then(()=>toast('همه‌ی '+toFa(links.length)+' کانفیگ کپی شد ✓','ok'));
-}}
-async function autoRefresh(){{
-  try{{
-    const data = await loadData(savedPw);
-    if (!data.locked) renderContent(data);
-  }} catch(e) {{}}
-}}
-async function init(){{
-  try{{
-    const data = await loadData();
-    if (data.locked) {{ renderLock(data.name); return; }}
-    renderContent(data);
-  }} catch(e) {{
-    document.getElementById('root').innerHTML =
-      '<div class="empty-state" style="color:var(--red-t)"><i class="ti ti-alert-circle"></i>خطا در بارگذاری</div>';
-  }}
-}}
+function toast(msg,type=''){{const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');setTimeout(()=>t.classList.remove('show'),2400);}}
+function esc(s){{return String(s||'').replace(/[&<>"']/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[c]));}}
+function fmtB(b){{if(!b||b===0)return '0 B';if(b<1024)return b+' B';if(b<1024**2)return (b/1024).toFixed(1)+' KB';if(b<1024**3)return (b/1024**2).toFixed(2)+' MB';return (b/1024**3).toFixed(2)+' GB';}}
+function toFa(n){{return String(n).replace(/\\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);}}
+function protoChip(p){{if(p==='xhttp-stream-one')return '<span class="proto-chip pc-ultra"><i class="ti ti-bolt"></i> XHTTP ULTRA</span>';if(p&&p.startsWith('xhttp'))return '<span class="proto-chip pc-xhttp">'+esc(p)+'</span>';return '<span class="proto-chip pc-ws">VLESS · WS</span>';}}
+function showQR(label,link){{document.getElementById('qr-label').textContent=label;document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=260x260&data='+encodeURIComponent(link);document.getElementById('qr-modal').classList.add('open');}}
+function toggleLink(i){{const wrap=document.getElementById('vw-'+i);const btn=document.getElementById('vt-'+i);const open=wrap.classList.toggle('open');btn.classList.toggle('open',open);btn.querySelector('.ltl span').textContent=open?'پنهان کردن لینک':'نمایش لینک کانفیگ';}}
+async function loadData(pw=''){{const url='/api/public/sub/'+UUID_KEY+(pw?'?pw='+encodeURIComponent(pw):'');const r=await fetch(url);return r.json();}}
+function renderLock(name,errMsg=''){{document.getElementById('root').innerHTML=`
+<div class="lock-stage"><div class="lock-card"><div class="lock-banner"><div class="lock-shield"><i class="ti ti-shield-lock"></i></div><div class="lock-title">${{esc(name)}}</div><div class="lock-sub">این گروه با رمز محافظت شده. برای دیدن کانفیگ‌ها رمز رو وارد کنید.</div></div><div class="lock-form"><div class="lock-err" id="lock-err">${{errMsg?'<i class="ti ti-alert-circle"></i> '+esc(errMsg):''}}</div><div class="lock-field"><i class="ti ti-lock lock-lockicon"></i><input class="lock-inp" type="password" id="lock-pw" placeholder="••••••••" autofocus><button class="lock-eye" type="button" onclick="togglePwVis()"><i class="ti ti-eye" id="lock-eye-icon"></i></button></div><button class="btn btn-p lock-btn" onclick="submitLock()"><i class="ti ti-lock-open"></i> ورود به گروه</button></div><div class="lock-footer"><i class="ti ti-shield-check"></i> اتصال شما رمزنگاری‌شده است</div></div></div>`;const inp=document.getElementById('lock-pw');inp.addEventListener('keydown',e=>{{if(e.key==='Enter')submitLock();}});}}
+function togglePwVis(){{const inp=document.getElementById('lock-pw');const icon=document.getElementById('lock-eye-icon');const toText=inp.type==='password';inp.type=toText?'text':'password';icon.className='ti '+(toText?'ti-eye-off':'ti-eye');}}
+async function submitLock(){{const pw=document.getElementById('lock-pw').value;const data=await loadData(pw);if(data.locked){{renderLock(data.name,'رمز اشتباه است');return;}}savedPw=pw;renderContent(data);}}
+function renderContent(d){{const activeCount=d.links.filter(l=>l.active).length;const baseSubUrl=d.sub_url||(window.location.protocol+'//'+window.location.host+'/sub-group/'+UUID_KEY);const subUrl=baseSubUrl+(savedPw?'?pw='+encodeURIComponent(savedPw):'');window._x4gSubUrl=subUrl;window._x4gSubName=d.name;window._x4gLinks=d.links.map(l=>({{vless:l.vless_link,sub:l.sub_url+(savedPw?'?pw='+encodeURIComponent(savedPw):''),label:l.label}}));document.getElementById('root').innerHTML=`
+<div class="sub-info"><div class="sub-eyebrow"><i class="ti ti-folders"></i> گروه دسترسی</div><div class="sub-name">${{esc(d.name)}}</div>${{d.desc?`<div class="sub-desc">${{esc(d.desc)}}</div>`:''}}<div class="sub-meta-row"><i class="ti ti-clock"></i> آخرین بروزرسانی: ${{new Date().toLocaleTimeString('fa-IR')}}</div><div class="sub-sub-box"><span class="sub-sub-url">${{esc(subUrl)}}</span><button class="btn btn-pur" style="padding:7px 12px;font-size:10.5px" onclick="navigator.clipboard.writeText(window._x4gSubUrl).then(()=>toast('لینک ساب کپی شد ✓','ok'))"><i class="ti ti-copy"></i> کپی لینک ساب</button><button class="btn btn-g" style="padding:7px 12px;font-size:10.5px" onclick="showQR(window._x4gSubName+' — کل گروه',window._x4gSubUrl)"><i class="ti ti-qrcode"></i> QR کل</button></div></div>
+<div class="copy-all-bar"><div class="copy-all-text"><div class="copy-all-title"><i class="ti ti-copy"></i> کپی همه‌ی کانفیگ‌ها</div><div class="copy-all-sub">تمام لینک‌های فعال این گروه را یک‌جا کپی کن</div></div><button class="copy-all-btn" onclick="copyAllConfigs()"><i class="ti ti-clipboard-copy"></i> کپی همه (${{toFa(activeCount)}})</button></div>
+<div class="stats-bar"><div class="stat-card"><div class="stat-label">کانفیگ‌های فعال</div><div class="stat-val">${{toFa(activeCount)}}</div><div class="stat-sub">از ${{toFa(d.links.length)}} کانفیگ</div></div><div class="stat-card"><div class="stat-label">اتصالات زنده</div><div class="stat-val">${{toFa(d.active_connections)}}</div><div class="stat-sub" style="color:var(--green-t);display:flex;align-items:center;gap:4px"><span class="dot"></span> آنلاین</div></div><div class="stat-card"><div class="stat-label">کل مصرف</div><div class="stat-val" style="font-size:17px;margin-top:3px">${{esc(d.total_used_fmt)}}</div><div class="stat-sub">همه کانفیگ‌ها</div></div></div>
+<div class="cfg-title"><i class="ti ti-link"></i> کانفیگ‌ها (${{toFa(d.links.length)}} عدد)</div><div class="cfg-grid">${{d.links.map((l,i)=>{{const pct=l.limit_bytes===0?0:Math.min(100,l.used_bytes/l.limit_bytes*100);const bc=pct>90?'var(--red)':pct>70?'var(--amber)':'var(--green)';const lim=l.limit_bytes===0?'∞':fmtB(l.limit_bytes);return`
+<div class="cfg-card${{l.active?'':' inactive'}}"><div class="cfg-top"><div class="cfg-head"><div><div class="cfg-label">${{esc(l.label)}}</div><div class="cfg-badges">${{protoChip(l.protocol)}}${{l.connections>0?`<span class="conn-chip"><span class="dot"></span> ${{toFa(l.connections)}} اتصال</span>`:''}}</div></div><span class="cfg-status ${{l.active?'ok':'no'}}">${{l.active?'<i class="ti ti-circle-check"></i> فعال':'<i class="ti ti-circle-x"></i> غیرفعال'}}</span></div><div class="cfg-usage"><div class="ubar"><div class="ubar-f" style="width:${{pct}}%;background:${{bc}}"></div></div><div class="utxt"><span>${{esc(l.used_fmt)}} مصرف شده</span><span>سهمیه: ${{lim}}</span></div></div></div><div class="cfg-tear"></div><div class="cfg-bottom"><button class="cfg-link-toggle" id="vt-${{i}}" onclick="toggleLink(${{i}})"><span class="ltl"><i class="ti ti-eye"></i> <span>نمایش لینک کانفیگ</span></span><i class="ti ti-chevron-down"></i></button><div class="cfg-vless-wrap" id="vw-${{i}}"><div class="cfg-vless-inner"><div class="cfg-vless">${{esc(l.vless_link)}}</div></div></div><div class="cfg-actions"><button class="btn btn-p" onclick="navigator.clipboard.writeText(window._x4gLinks[${{i}}].vless).then(()=>toast('لینک کپی شد ✓','ok'))"><i class="ti ti-copy"></i> کپی لینک</button><button class="btn btn-g" onclick="showQR(window._x4gLinks[${{i}}].label,window._x4gLinks[${{i}}].vless)"><i class="ti ti-qrcode"></i> QR</button></div></div></div>`;}}).join('')}}</div>`;setTimeout(()=>autoRefresh(),30000);}}
+function copyAllConfigs(){{const links=window._x4gLinks||[];if(!links.length){{toast('کانفیگی برای کپی نیست','');return;}}const text=links.map(l=>l.vless).join('\\n');navigator.clipboard.writeText(text).then(()=>toast('همه‌ی '+toFa(links.length)+' کانفیگ کپی شد ✓','ok'));}}
+async function autoRefresh(){{try{{const data=await loadData(savedPw);if(!data.locked)renderContent(data);}}catch(e){{}}}}
+async function init(){{try{{const data=await loadData();if(data.locked){{renderLock(data.name);return;}}renderContent(data);}}catch(e){{document.getElementById('root').innerHTML='<div class="empty-state" style="color:var(--red-t)"><i class="ti ti-alert-circle"></i>خطا در بارگذاری</div>';}}}}
 init();
 </script>
 </body></html>"""
