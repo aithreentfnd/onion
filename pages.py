@@ -65,7 +65,7 @@ input:focus+.ic{color:var(--accent)}
       <div><div class="brand-name">SpaceZone</div><div class="brand-sub">v10.0</div></div>
     </div>
     <h1>ورود به پنل</h1>
-    <p class="sub">رمز عبور را برای دسترسی به داشبورد وارد کنید</p>
+    <p class="sub">برای ورود به داشبورد رمزتو وارد کن</p>
     <div class="err" id="err"><i class="ti ti-alert-circle"></i><span id="err-text"></span></div>
     <div class="hint">
       <span class="hint-label">رمز پیش‌فرض سیستم</span>
@@ -75,7 +75,7 @@ input:focus+.ic{color:var(--accent)}
       <div class="field">
         <label>رمز عبور</label>
         <div class="inp-wrap">
-          <input type="password" id="pw" placeholder="رمز عبور را وارد کنید" autofocus required>
+          <input type="password" id="pw" placeholder="رمزتو وارد کن" autofocus required>
           <i class="ti ti-lock ic"></i>
         </div>
       </div>
@@ -152,7 +152,7 @@ a{color:inherit;text-decoration:none}
 .sb-close{display:none;position:absolute;left:12px;top:20px;background:var(--accent-d);border:1px solid var(--card-b);color:var(--t2);width:30px;height:30px;border-radius:11px;font-size:16px;align-items:center;justify-content:center;cursor:pointer}
 .nav-wrap{flex:1;overflow-y:auto;padding:6px 0 8px}
 .nav-sec{padding:14px 14px 4px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);font-weight:700}
-.nav-it{display:flex;align-items:center;gap:9px;padding:9px 14px;color:var(--t3);font-size:12.5px;cursor:pointer;border-right:2px solid transparent;transition:all .15s;margin:1px 6px}
+.nav-it{display:flex;align-items:center;gap:9px;padding:9px 14px;color:var(--t3);font-size:12.5px;cursor:pointer;border-right:2px solid transparent;border-radius:11px;transition:all .15s;margin:1px 6px}
 .nav-it i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
 .nav-it:hover{background:var(--accent-d);color:var(--t2)}
 .nav-it.on{background:var(--accent-d);color:var(--t1);border-right-color:var(--accent);font-weight:600}
@@ -720,7 +720,7 @@ a{color:inherit;text-decoration:none}
       <button class="modal-v2-close" onclick="closeModal('modal-create-sub')"><i class="ti ti-x"></i></button>
       <div class="modal-v2-icon"><i class="ti ti-folder-plus"></i></div>
       <div class="modal-v2-title">ساخت گروه جدید</div>
-      <div class="modal-v2-sub">یک صفحه پابلیک مجزا برای مدیریت کانفیگ‌ها بسازید</div>
+      <div class="modal-v2-sub">یه صفحه‌ی پابلیک جدا می‌سازه که کانفیگ‌های این گروه رو نشون بده</div>
     </div>
     <div class="modal-v2-body">
       <div class="modal-v2-field">
@@ -735,7 +735,7 @@ a{color:inherit;text-decoration:none}
         <label><i class="ti ti-lock"></i> رمز صفحه پابلیک (اختیاری)</label>
         <input class="modal-v2-input" id="ns-pw" type="password" placeholder="خالی بگذارید = بدون رمز">
       </div>
-      <div class="cl" style="margin-top:14px"><i class="ti ti-info-circle"></i><span>صفحه پابلیک این گروه با یک لینک منحصر‌به‌فرد در اینترنت در دسترس خواهد بود.</span></div>
+      <div class="cl" style="margin-top:14px"><i class="ti ti-info-circle"></i><span>این گروه یه لینک مخصوص خودش می‌گیره که هرکی داشته باشه می‌تونه ببینتش.</span></div>
       <div class="modal-v2-footer">
         <button class="btn btn-o" onclick="closeModal('modal-create-sub')" style="flex:.6">انصراف</button>
         <button class="btn btn-pur" onclick="createSub()"><i class="ti ti-folder-plus"></i> ساخت گروه</button>
@@ -780,7 +780,7 @@ a{color:inherit;text-decoration:none}
       <div class="fg" style="flex:1"><label>محدودیت سرعت (0 = نامحدود)</label><input class="fi" id="el-speed" type="number" min="0" step="0.5" style="width:100%"></div>
       <div class="fg"><label>واحد</label><select class="fs" id="el-speed-unit"><option value="MBIT">Mbps</option><option value="KB">KB/s</option><option value="MB">MB/s</option></select></div>
     </div>
-    <div class="cl"><i class="ti ti-info-circle"></i><span>برای حفظ انقضای فعلی، فیلد انقضا را صفر بگذارید.</span></div>
+    <div class="cl"><i class="ti ti-info-circle"></i><span>اگه نمی‌خوای انقضا عوض بشه، این فیلد رو صفر بذار.</span></div>
     <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end">
       <button class="btn btn-o" onclick="closeModal('modal-edit-link')">انصراف</button>
       <button class="btn btn-p" onclick="saveEditLink()"><i class="ti ti-check"></i> ذخیره تغییرات</button>
@@ -882,7 +882,7 @@ a{color:inherit;text-decoration:none}
 </section>
 <section class="pg" id="pg-links">
   <div class="topbar">
-    <div><div class="tb-title"><i class="ti ti-link-plus"></i> کانفیگ‌ها</div><div class="tb-sub">ساخت و مدیریت کانفیگ با سهمیه، انقضا و گروه‌بندی</div></div>
+    <div><div class="tb-title"><i class="ti ti-link-plus"></i> کانفیگ‌ها</div><div class="tb-sub">کانفیگ بساز و با سهمیه، انقضا و گروه‌بندی مدیریتش کن</div></div>
     <div class="tb-right"><span class="badge bg-blue" id="links-pg-cnt">۰ کانفیگ</span></div>
   </div>
   <div class="create-panel">
@@ -1026,7 +1026,7 @@ a{color:inherit;text-decoration:none}
         </div>
       </div>
       <div class="cp-footer">
-        <div class="cp-footer-note"><i class="ti ti-info-circle"></i> UUID کاملاً رندوم تولید می‌شود · فقط UUID‌های ثبت‌شده اجازه اتصال دارند · پروتکل پس از ساخت قابل تغییر نیست.</div>
+        <div class="cp-footer-note"><i class="ti ti-info-circle"></i> UUID کاملاً رندوم ساخته می‌شه، فقط UUID‌های ثبت‌شده وصل می‌شن و بعد از ساخت دیگه نمی‌تونی پروتکلش رو عوض کنی.</div>
         <button class="cp-submit-btn" onclick="createLink()"><i class="ti ti-link-plus"></i> ساخت کانفیگ</button>
       </div>
     </div>
@@ -1049,7 +1049,7 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
   <div class="sub-grid" id="subs-grid">
-    <div class="subs-empty-v2"><div class="subs-empty-v2-icon"><i class="ti ti-folders"></i></div><div class="subs-empty-v2-title">هنوز گروهی وجود ندارد</div><div class="subs-empty-v2-sub">یک گروه جدید بسازید تا کانفیگ‌ها را دسته‌بندی کنید</div></div>
+    <div class="subs-empty-v2"><div class="subs-empty-v2-icon"><i class="ti ti-folders"></i></div><div class="subs-empty-v2-title">هنوز گروهی نساختی</div><div class="subs-empty-v2-sub">یه گروه جدید بساز تا کانفیگ‌هات رو دسته‌بندی کنی</div></div>
   </div>
 </section>
 <section class="pg" id="pg-subscriptions">
@@ -1057,13 +1057,13 @@ a{color:inherit;text-decoration:none}
   <div class="g2">
     <div class="card">
       <div class="card-title"><i class="ti ti-rss"></i> سابسکریپشن تکی (هر کانفیگ)</div>
-      <p style="font-size:11.5px;color:var(--t3);line-height:1.8;margin-bottom:12px">هر کانفیگ URL سابسکریپشن مخصوص دارد. از کارت کانفیگ روی آیکون <i class="ti ti-rss"></i> کلیک کنید.</p>
+      <p style="font-size:11.5px;color:var(--t3);line-height:1.8;margin-bottom:12px">هر کانفیگ لینک سابسکریپشن مخصوص خودشو داره. کافیه از کارت کانفیگ روی آیکون <i class="ti ti-rss"></i> کلیک کنید.</p>
     </div>
     <div class="card">
       <div class="card-title"><i class="ti ti-database"></i> سابسکریپشن کامل (ادمین)</div>
       <p style="font-size:11.5px;color:var(--t3);line-height:1.8;margin-bottom:4px">شامل تمام کانفیگ‌های فعال.</p>
       <div class="sub-box"><span class="sub-url" id="sub-all-url">در حال دریافت...</span><div style="display:flex;gap:6px"><button class="btn btn-sm btn-g" onclick="cpSubAll()"><i class="ti ti-copy"></i></button><button class="btn btn-sm btn-g" onclick="window.open(location.protocol+'//'+location.host+'/sub-all')"><i class="ti ti-external-link"></i></button></div></div>
-      <div class="cl amber" style="margin-top:11px"><i class="ti ti-alert-triangle"></i><span>این آدرس فقط در مرورگری که به پنل وارد شده کار می‌کند (نیاز به کوکی سشن).</span></div>
+      <div class="cl amber" style="margin-top:11px"><i class="ti ti-alert-triangle"></i><span>این لینک فقط تو همون مرورگری کار می‌کنه که وارد پنل شدی (چون به کوکی سشن نیاز داره).</span></div>
     </div>
   </div>
   <div class="card">
@@ -1149,7 +1149,7 @@ a{color:inherit;text-decoration:none}
   <div class="conn-empty-v2" id="conns-empty" style="display:none">
     <div class="conn-empty-v2-icon"><i class="ti ti-plug-off"></i></div>
     <div class="conn-empty-v2-title">هیچ اتصال فعالی نیست</div>
-    <div class="conn-empty-v2-sub">به محض اتصال کلاینت‌ها، اینجا نمایش داده می‌شوند</div>
+    <div class="conn-empty-v2-sub">به محض وصل شدن کلاینت‌ها همینجا نشون داده می‌شن</div>
   </div>
 </section>
 <section class="pg" id="pg-security">
@@ -1174,7 +1174,7 @@ a{color:inherit;text-decoration:none}
   </div>
 </section>
 <section class="pg" id="pg-logs">
-  <div class="topbar"><div><div class="tb-title"><i class="ti ti-history"></i> لاگ فعالیت‌ها</div><div class="tb-sub">تاریخچه‌ی کامل رخدادهای پنل</div></div><div class="tb-right"><button class="btn btn-p btn-sm" onclick="loadActivity()"><i class="ti ti-refresh"></i></button></div></div>
+  <div class="topbar"><div><div class="tb-title"><i class="ti ti-history"></i> لاگ فعالیت‌ها</div><div class="tb-sub">تاریخچه‌ی همه‌ی اتفاق‌های پنل</div></div><div class="tb-right"><button class="btn btn-p btn-sm" onclick="loadActivity()"><i class="ti ti-refresh"></i></button></div></div>
   <div class="card"><div class="log-timeline" id="logs-list">—</div><div class="empty" id="logs-empty" style="display:none"><i class="ti ti-history-toggle"></i><p>هنوز لاگی ثبت نشده</p></div></div>
 </section>
 <section class="pg" id="pg-errors">
@@ -1184,7 +1184,7 @@ a{color:inherit;text-decoration:none}
 <section class="pg" id="pg-testws">
   <div class="topbar"><div><div class="tb-title"><i class="ti ti-wifi"></i> تست WebSocket</div></div></div>
   <div class="card" style="max-width:660px">
-    <div class="cl amber" style="margin-top:0;margin-bottom:12px"><i class="ti ti-alert-triangle"></i><span>فقط UUID‌های ثبت‌شده و فعال اتصال برقرار می‌کنند (این فقط تست VLESS/WS است؛ تست XHTTP از خود کلاینت انجام می‌شود).</span></div>
+    <div class="cl amber" style="margin-top:0;margin-bottom:12px"><i class="ti ti-alert-triangle"></i><span>فقط UUID‌هایی که ثبت و فعال هستن می‌تونن وصل بشن (این فقط تست VLESS/WS ـه؛ تست XHTTP رو باید از خود کلاینت انجام بدی).</span></div>
     <div class="form-row" style="margin-bottom:12px">
       <div class="fg" style="flex:1"><label>UUID (باید در کانفیگ‌ها وجود داشته باشد)</label><input class="fi" id="ws-uuid" placeholder="UUID یک کانفیگ فعال" style="width:100%"></div>
       <button class="btn btn-p" onclick="wsConn()"><i class="ti ti-plug-connected"></i> اتصال</button>
@@ -1223,7 +1223,7 @@ a{color:inherit;text-decoration:none}
         <div class="pw-hero-icon"><i class="ti ti-key"></i></div>
         <div class="pw-hero-text">
           <div class="pw-hero-title">تغییر رمز عبور</div>
-          <div class="pw-hero-sub">رمز قوی انتخاب کنید و آن را جایی امن نگه دارید</div>
+          <div class="pw-hero-sub">یه رمز قوی بذار و یه جای امن نگهش دار</div>
         </div>
       </div>
       <div class="pw-body">
@@ -1554,7 +1554,7 @@ async function loadSubs(){
 function renderSubsGrid(subs){
   const grid=document.getElementById('subs-grid');
   if(!subs.length){
-    grid.innerHTML='<div class="subs-empty-v2"><div class="subs-empty-v2-icon"><i class="ti ti-folders"></i></div><div class="subs-empty-v2-title">هنوز گروهی وجود ندارد</div><div class="subs-empty-v2-sub">یک گروه جدید بسازید تا کانفیگ‌ها را دسته‌بندی کنید</div></div>';
+    grid.innerHTML='<div class="subs-empty-v2"><div class="subs-empty-v2-icon"><i class="ti ti-folders"></i></div><div class="subs-empty-v2-title">هنوز گروهی نساختی</div><div class="subs-empty-v2-sub">یه گروه جدید بساز تا کانفیگ‌هات رو دسته‌بندی کنی</div></div>';
     return;
   }
   grid.innerHTML=subs.map(s=>`
@@ -2178,7 +2178,7 @@ function renderLock(name,errMsg=''){{
         <div class="lock-banner">
           <div class="lock-shield"><i class="ti ti-shield-lock"></i></div>
           <div class="lock-title">${{esc(name)}}</div>
-          <div class="lock-sub">این گروه با رمز محافظت شده. برای دیدن کانفیگ‌ها رمز رو وارد کنید.</div>
+          <div class="lock-sub">این گروه رمز داره. برای دیدن کانفیگ‌ها رمزشو بزن.</div>
         </div>
         <div class="lock-form">
           <div class="lock-err" id="lock-err">${{errMsg ? '<i class="ti ti-alert-circle"></i> '+esc(errMsg) : ''}}</div>
@@ -2189,7 +2189,7 @@ function renderLock(name,errMsg=''){{
           </div>
           <button class="btn btn-p lock-btn" onclick="submitLock()"><i class="ti ti-lock-open"></i> ورود به گروه</button>
         </div>
-        <div class="lock-footer"><i class="ti ti-shield-check"></i> اتصال شما رمزنگاری‌شده است</div>
+        <div class="lock-footer"><i class="ti ti-shield-check"></i> اتصالت رمزنگاری‌شده‌ست</div>
       </div>
     </div>
   `;
